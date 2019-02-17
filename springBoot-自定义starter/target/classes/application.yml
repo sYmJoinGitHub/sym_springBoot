@@ -1,0 +1,8 @@
+## 自定义starter时，使用的属性
+sym.starter.name: \u6C88\u71D5\u660E
+## web服务器的配置
+server:
+  port: 8080 #修改端口
+  context-path: /sym
+logging:
+  level: debug #定义日志输出级别

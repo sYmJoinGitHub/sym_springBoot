@@ -1,0 +1,6 @@
+management:
+  security:
+    enabled: false #关闭认证，默认为true表示需要登录后才可以查看各项指标
+info:
+  app: my
+

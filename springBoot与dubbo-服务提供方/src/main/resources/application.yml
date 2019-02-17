@@ -1,0 +1,8 @@
+## springBoot集成dubbo，作为服务提供方的配置
+dubbo:
+  scan:
+    base-packages: com.sym.service #配置哪一个包下面的接口要发布出去
+  registry:
+    address: zookeeper://192.168.64.129:2181 #配置zookeeper的注册地址
+  application:
+    name: service-producer #应用名称

@@ -1,0 +1,4 @@
+##  springBoot对日志的配置
+logging:
+  level: debug #定义日志输出级别
+  #file: springBoot.log #指定日志保存文件

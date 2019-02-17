@@ -1,0 +1,3 @@
+这是springBoot与消息系统集成的package
+
+目前有集成了：RabbitMQ

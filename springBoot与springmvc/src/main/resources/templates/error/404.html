@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>404</title>
+</head>
+<body>
+    <h3> springBoot默认的异常错误返回信息： </h3>
+    时间戳：[[${#dates.format(timestamp,'yyyy-MM-dd HH:mm:ss')}]] <br/>
+    状态码：[[${status}]] <br/>
+    错误提示：[[${error}]] <br/>
+    异常对象：[[${exception}]] <br/>
+    异常消息：[[${message}]] <br/>
+    JSR303数据校验的错误：[[${errors}]] <br/>
+</body>
+</html>

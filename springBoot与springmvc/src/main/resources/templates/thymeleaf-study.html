@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>thymeleaf学习</title>
+    <!-- “@{}”表达式一般用在src或者href指定路径，它默认会加上项目上下文路径 -->
+    <link th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.css}" rel="stylesheet">
+</head>
+<body>
+    <!-- thymeleaf表达式的使用 -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <h3>thymeleaf表达式使用</h3>
+            </div>
+        </div>
+        <div class="panel-body">
+            <h3>①使用${}获取后台传过来的参数</h3>
+            <label>获取字符串：</label><label th:text="${msg}"></label><br>
+            <label>获取对象：</label>
+            <select th:object="${bean}">
+                <option th:value="*{id}" th:text="*{id}"></option>
+                <option th:value="*{name}" th:text="*{name}"></option>
+            </select>
+            <br>
+            <label>获取map：</label><input th:value="${map.name}" style="width: 55px;"/><br>
+            <label>获取list：</label>
+            <ul style="list-style: none">
+                <li th:each="var,statis:${list}" th:text="${statis.index}+'-'+${var}"></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <h3>thymeleaf布局-提取公用模块</h3>
+            </div>
+        </div>
+        <div class="panel-body">
+            <h4>①使用th:fragment定义公用模块</h4>
+                <div th:fragment="circle" style="width: 35px;height: 35px;background-color: coral;border-radius: 50%;text-align: center;line-height: 35px;">1</div>
+                <h5>可以：使用th:insert引入.</h5>
+                <div th:insert="~{thymeleaf-study::circle}"></div>
+                <h5>可以：使用th:replace引入.</h5>
+                <div th:replace="~{thymeleaf-study::circle}"></div>
+                <h5>可以：使用th:include引入.</h5>
+                <div th:include="~{thymeleaf-study::circle}"></div>
+            <h4>②使用th:fragment定义模板，还可以设置参数</h4>
+                <span th:fragment="span(content)" style="color: red;font-size: small">
+                    [[${content}]]
+                </span>
+                <div th:replace="thymeleaf-study::span('我是第一种参数')"></div><br>
+                <div th:replace="thymeleaf-study::span('我是另一种参数')"></div>
+        </div>
+    </div>
+
+</body>
+</html>

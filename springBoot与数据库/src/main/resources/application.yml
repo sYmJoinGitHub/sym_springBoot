@@ -1,0 +1,52 @@
+## 数据源的配置
+spring:
+  datasource:
+    #数据源公用的配置
+    #默认使用Tomcat的连接池,这边指定为druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    # jdbc:mysql://94.191.23.71/test?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    # jdbc:mysql://127.0.0.1:3306/spring_study?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/spring_study?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password:
+    #c3p0数据源的其他配置
+    initialPoolSize: 5
+    maxPoolSize: 10
+    minPoolSize: 5
+    acquireIncrement: 5
+    maxIdleTime: 1800
+    autoCommitOnClose: false
+    #druid数据源的其他配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    filters: stat,wall,log4j #druid数据源配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+  ## springData JPA整合
+  jpa:
+    show-sql: true
+
+#springBoot与mybatis整合-配置文件版，最重要的两步：指定mybatis的全局配置文件和各个mapper文件的路径
+mybatis:
+  config-location: classpath:/config/mybatis-config.xml #指定全局配置文件的位置
+  mapper-locations: classpath:/mapper/*.xml #指定映射mapper接口的mapper文件位置
+  #configuration:
+    #map-underscore-to-camel-case: true # 是否开启驼峰命名规则与数据库的字段对应
+
+
+## web服务器的配置
+server:
+  port: 8080 #修改端口
+  context-path: /sym #修改项目根路径
+logging:
+  level: debug #定义日志输出级别

@@ -2,3 +2,9 @@
 logging:
   level: debug #定义日志输出级别
   #file: springBoot.log #指定日志保存文件
+spring:
+  application:
+    name: log-project
+
+project:
+  info: god-job

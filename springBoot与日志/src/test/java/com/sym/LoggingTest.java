@@ -14,20 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = LoggingTest.class)
 public class LoggingTest {
-
-    // 定义日志记录器
-    private static Logger LOGGER = LoggerFactory.getLogger(LoggingTest.class);
-
-    /**
-     * 直接运行此方法，观察springBoot的日志打印情况
-     */
     @Test
     public void context(){
-        // 记录不同级别的日志
-        LOGGER.trace("trace级别...");
-        LOGGER.debug("debug级别...");
-        LOGGER.info("info级别...");
-        LOGGER.warn("wrn级别...");
-        LOGGER.error("error级别...");
+
     }
 }

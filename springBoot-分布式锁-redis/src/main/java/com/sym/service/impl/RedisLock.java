@@ -2,7 +2,7 @@ package com.sym.service.impl;
 
 import com.sym.service.IRedisLock;
 import com.sym.util.LockSupportUtil;
-import com.sym.util.SpringUtil;
+import com.sym.util.SpringContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.ReturnType;
@@ -11,7 +11,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
-import java.util.concurrent.locks.LockSupport;
 
 /**
  * 自己实现的分布式锁
@@ -85,7 +84,7 @@ public class RedisLock implements IRedisLock {
 
     private static void init(){
         // 获取RedisTemplate实例
-        redisTemplate = SpringUtil.getBean(RedisTemplate.class);
+        redisTemplate = SpringContextUtil.getBean(RedisTemplate.class);
         // 先去redis服务器缓存脚本
         redisTemplate.execute((RedisCallback<String>)conn->{
             lockScript_SHA = conn.scriptLoad(lockScript.getBytes());
@@ -172,7 +171,7 @@ public class RedisLock implements IRedisLock {
     }
 
     /**
-     * 实际加锁方法
+     * 实际加锁方法 Distributed
      * @param ttlTime
      * @return
      */
@@ -187,13 +186,13 @@ public class RedisLock implements IRedisLock {
                     LOGGER.info("线程-{},获取到锁-{}",Thread.currentThread().getName(),lockKey);
                     return true;
                 }
-                else return false;
+                return false;
             });
         }catch (Exception e){
             LOGGER.error("加锁异常，原因：{}",e.getMessage());
         }
-        if( result == null ) return false;
-        return result;
+        // 有可能执行完 redisTemplate.execute()后返回null
+        return result == null?false:result;
     }
 
 
@@ -208,13 +207,11 @@ public class RedisLock implements IRedisLock {
                 // 尝试解锁
                 Long o = conn.evalSha(unLockScript_SHA,ReturnType.INTEGER,3,lockKey.getBytes(), "uuid".getBytes(),
                         "count".getBytes(),threadId.getBytes());
-                if(o == 1L) return true;
-                else return false;
+                return o == 1L;
             });
-
         }catch (Exception e){
             LOGGER.error("解锁异常，原因：{}",e.getMessage());
         }
-        return result;
+        return result == null?false:result;
     }
 }

@@ -12,19 +12,19 @@ import org.springframework.stereotype.Component;
  * @Date: 2019-03-26 10:55
  */
 @Component
-public class SpringUtil implements ApplicationContextAware {
+public class SpringContextUtil implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext = null;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext)
             throws BeansException {
-        SpringUtil.applicationContext = applicationContext;
+        SpringContextUtil.applicationContext = applicationContext;
     }
 
     public static <T> T getBean(Class<T> t) {
         if (applicationContext != null) {
-            return applicationContext.getBean("redisTemplate",t);
+            return applicationContext.getBean(t);
         }
         throw new NullPointerException("SpringUtil.applicationContext is null");
     }

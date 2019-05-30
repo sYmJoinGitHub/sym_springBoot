@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.sym</groupId>
+    <artifactId>sym-springBoot-starter</artifactId> <!--非明文规定，但是如果不是springBoot官方提供的starter，默认取名为： 自定义名+springBoot-starter -->
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>sym-starter-启动器</name>
+    <description>启动器starter并不负责处理任何事,它的作用就是引入自动配置包而已</description>
+
+    <dependencies>
+        <dependency>
+            <!-- 引入我们自定义的自动配置包 -->
+            <groupId>com.sym</groupId>
+            <artifactId>sym-component</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    
+</project>

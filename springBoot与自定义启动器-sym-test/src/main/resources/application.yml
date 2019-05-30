@@ -1,0 +1,4 @@
+spring:
+  sym:
+    component:
+      enable: true

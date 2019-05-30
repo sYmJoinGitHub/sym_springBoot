@@ -1,6 +1,7 @@
 package com.sym;
 
 import com.sym.service.impl.RedisLock;
+import com.sym.util.SpringContextUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,8 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.locks.LockSupport;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Auther: shenym
@@ -36,8 +36,7 @@ public class MainTest {
 
             @Override
             public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
-
-          String lock = "if(redis.call('exists',KEYS[1]) == 1) then ";
+         String lock = "if(redis.call('exists',KEYS[1]) == 1) then ";
                 lock += "if(redis.call('hget',KEYS[1],KEYS[2]) == ARGV[1]) then ";
                 lock += "redis.call('hincrby',KEYS[1],KEYS[3],1) ";
                 lock += "redis.call('expire',KEYS[1],60) ";
@@ -78,14 +77,14 @@ public class MainTest {
     @Test
     public void testThree(){
         final CountDownLatch latch = new CountDownLatch(3);
-        for( int i=0;i<3;i++ ){
+        for( int i=0;i<5;i++ ){
             new Thread(()->{
                 try {
                     RedisLock lock = new RedisLock("sym_lock");
                     lock.lockWithBlock();
-                    System.out.println(Thread.currentThread().getName()+",已经重新唤醒...");
+                    //System.out.println(Thread.currentThread().getName()+",已经重新唤醒...");
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }finally {
@@ -101,6 +100,15 @@ public class MainTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Test
+    public void testFour(){
+        RedisTemplate redisTemplate = (RedisTemplate) SpringContextUtil.getBean("redisTemplate");
+        redisTemplate.opsForValue().set("good","job",100, TimeUnit.SECONDS);
+        Long expire = redisTemplate.getExpire("good");
+        System.out.println(expire);
     }
 
 }

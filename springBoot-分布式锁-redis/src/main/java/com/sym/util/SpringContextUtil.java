@@ -28,4 +28,11 @@ public class SpringContextUtil implements ApplicationContextAware {
         }
         throw new NullPointerException("SpringUtil.applicationContext is null");
     }
+
+    public static Object getBean(String name){
+        if (applicationContext != null) {
+            return applicationContext.getBean(name);
+        }
+        throw new NullPointerException("SpringUtil.applicationContext is null");
+    }
 }

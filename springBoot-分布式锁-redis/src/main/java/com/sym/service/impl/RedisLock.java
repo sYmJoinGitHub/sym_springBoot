@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
@@ -84,7 +85,7 @@ public class RedisLock implements IRedisLock {
 
     private static void init(){
         // 获取RedisTemplate实例
-        redisTemplate = SpringContextUtil.getBean(RedisTemplate.class);
+        redisTemplate = (RedisTemplate)SpringContextUtil.getBean("redisTemplate");
         // 先去redis服务器缓存脚本
         redisTemplate.execute((RedisCallback<String>)conn->{
             lockScript_SHA = conn.scriptLoad(lockScript.getBytes());
@@ -100,11 +101,13 @@ public class RedisLock implements IRedisLock {
     }
 
     public RedisLock(String lockKey){
-        if( StringUtils.isEmpty( lockKey )){
-            throw new NullPointerException("key must not be null");
-        }
+        Assert.hasLength(lockKey,"key must not be null");
         this.lockKey = lockKey;
-        this.threadId = UUID.randomUUID().toString().replace("-","");
+        this.threadId = getThreadId();
+    }
+
+    private String getThreadId(){
+        return UUID.randomUUID().toString().replace("-","").concat(System.currentTimeMillis()+"");
     }
 
 
@@ -150,8 +153,8 @@ public class RedisLock implements IRedisLock {
             if( lock(ttlTime) )
                 return true;
             else {
-                // 线程在此阻塞
                 try {
+                    // 线程在此阻塞
                     LockSupportUtil.park(lockKey);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -183,7 +186,7 @@ public class RedisLock implements IRedisLock {
                 Long o = conn.evalSha(lockScript_SHA, ReturnType.INTEGER, 3, lockKey.getBytes(), "uuid".getBytes(),
                         "count".getBytes(), threadId.getBytes(), "1".getBytes(), String.valueOf(ttlTime).getBytes());
                 if(o == 1L) {
-                    LOGGER.info("线程-{},获取到锁-{}",Thread.currentThread().getName(),lockKey);
+                    LOGGER.info("thead {},获取到锁-{}",Thread.currentThread().getName(),lockKey);
                     return true;
                 }
                 return false;

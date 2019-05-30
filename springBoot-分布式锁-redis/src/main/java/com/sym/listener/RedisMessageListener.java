@@ -31,7 +31,7 @@ public class RedisMessageListener {
         container.setConnectionFactory(redisConnectionFactory);
         // 表示监听redis-lock这个通道，用 messageListenerAdapter 这个适配器去处理通道的消息
         container.addMessageListener(messageListenerAdapter,new PatternTopic("redis-lock"));
-        container.addMessageListener(messageListenerAdapter,new PatternTopic("__keyevent@0__:expired"));
+        //container.addMessageListener(messageListenerAdapter,new PatternTopic("__keyevent@0__:expired"));
         // 可以添加另外的监听通道
         // ...
         return container;
@@ -44,6 +44,6 @@ public class RedisMessageListener {
     @Bean
     public MessageListenerAdapter messageListenerAdapter(){
         // 指定处理通道消息的类和方法
-        return new MessageListenerAdapter(new RedisMessageResolver(),"lockHandler");
+        return new MessageListenerAdapter(new RedisMessageResolver(),"handlerMessage");
     }
 }

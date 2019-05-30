@@ -24,6 +24,7 @@
 	</properties>
 
 	<dependencies>
+
 		<!-- springBoot的配置文件处理器(绑定配置文件会有提示) -->
 		<dependency>
             <groupId>org.springframework.boot</groupId>

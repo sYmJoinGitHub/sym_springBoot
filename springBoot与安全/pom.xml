@@ -29,11 +29,11 @@
 
 	<dependencies>
 		<!-- springBoot的配置文件处理器(绑定配置文件会有提示) -->
-<!--		<dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-configuration-processor</artifactId>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
 
 		<!-- springBoot的单元测试模块 -->
 		<dependency>

@@ -6,7 +6,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     # jdbc:mysql://94.191.23.71/test?useUnicode=true&characterEncoding=utf-8&useSSL=false
     # jdbc:mysql://127.0.0.1:3306/spring_study?useUnicode=true&characterEncoding=utf-8&useSSL=false
-    url: jdbc:mysql://127.0.0.1:3306/spring_study?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/spring?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password:
     #c3p0数据源的其他配置

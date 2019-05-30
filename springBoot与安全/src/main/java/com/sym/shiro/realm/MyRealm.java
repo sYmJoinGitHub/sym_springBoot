@@ -24,8 +24,7 @@ public class MyRealm extends AuthorizingRealm{
         String username = "张三";
         String password = "123456";
         /* 将需要校验的用户名和密码返回给shiro，它会自己拿authenticationToken里面的用户名和密码去验证 */
-        AuthenticationInfo retInfo = new SimpleAuthenticationInfo(username,password,super.getName());
-        return retInfo;
+        return new SimpleAuthenticationInfo(username,password,super.getName());
     }
 
 

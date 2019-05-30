@@ -24,6 +24,7 @@
 	</properties>
 
 	<dependencies>
+
 		<!-- springBoot提供的监管审计当前项目运行状态的starter -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

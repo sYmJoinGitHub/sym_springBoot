@@ -27,6 +27,7 @@
 	</properties>
 
 	<dependencies>
+
 		<!-- springBoot的单元测试模块 -->
 		<dependency>
             <groupId>org.springframework.boot</groupId>

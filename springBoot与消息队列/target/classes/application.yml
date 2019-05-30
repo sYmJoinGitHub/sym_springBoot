@@ -1,7 +1,0 @@
-## springBoot整合rabbit的配置
-spring:
-  rabbitmq:
-    addresses: 127.0.0.1 #本地虚拟机地址192.168.64.129
-    port: 5672
-    username: guest
-    password: guest

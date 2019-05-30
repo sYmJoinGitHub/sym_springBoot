@@ -1,6 +1,0 @@
-## web服务器的配置
-server:
-  port: 8080 #修改端口
-  context-path: /sym #修改项目根路径
-logging:
-  level: debug #定义日志输出级别

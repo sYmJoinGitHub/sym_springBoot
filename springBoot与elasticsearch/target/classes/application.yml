@@ -1,5 +1,0 @@
-## jest的配置
-spring:
-  elasticsearch:
-      jest:
-        uris: http://127.0.0.1:9200

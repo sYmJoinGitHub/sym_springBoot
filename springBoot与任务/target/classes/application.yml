@@ -1,8 +1,0 @@
-## javaMail的配置
-spring:
-  mail:
-      host: smtp.163.com
-      username: qaz542569199@163.com
-      password: qaz542569199
-      properties:
-        mail.smtp.ssl.enable: true

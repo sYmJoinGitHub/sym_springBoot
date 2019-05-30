@@ -1,0 +1,4 @@
+springBoot与mybatis整合-配置文件版
+
+mybatis-config.xml是mybatis的全局配置文件
+目录mapper/下的是mapper文件

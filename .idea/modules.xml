@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/springBoot-自定义starter/springBoot-sym-starter.iml" filepath="$PROJECT_DIR$/springBoot-自定义starter/springBoot-sym-starter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot-自定义starter/springBoot-自定义starter.iml" filepath="$PROJECT_DIR$/springBoot-自定义starter/springBoot-自定义starter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与ELK/springBoot与ELK.iml" filepath="$PROJECT_DIR$/springBoot与ELK/springBoot与ELK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与dubbo-服务提供方/springBoot与dubbo-服务提供方.iml" filepath="$PROJECT_DIR$/springBoot与dubbo-服务提供方/springBoot与dubbo-服务提供方.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与dubbo-服务消费方/springBoot与dubbo-服务消费方.iml" filepath="$PROJECT_DIR$/springBoot与dubbo-服务消费方/springBoot与dubbo-服务消费方.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与elasticsearch/springBoot与elasticsearch.iml" filepath="$PROJECT_DIR$/springBoot与elasticsearch/springBoot与elasticsearch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与springmvc/springBoot与springmvc.iml" filepath="$PROJECT_DIR$/springBoot与springmvc/springBoot与springmvc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与事件回调机制/springBoot与事件回调机制.iml" filepath="$PROJECT_DIR$/springBoot与事件回调机制/springBoot与事件回调机制.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与任务/springBoot与任务.iml" filepath="$PROJECT_DIR$/springBoot与任务/springBoot与任务.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与分布式锁-redis/springBoot与分布式锁-redis.iml" filepath="$PROJECT_DIR$/springBoot与分布式锁-redis/springBoot与分布式锁-redis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与国际化/springBoot与国际化.iml" filepath="$PROJECT_DIR$/springBoot与国际化/springBoot与国际化.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与安全/springBoot与安全.iml" filepath="$PROJECT_DIR$/springBoot与安全/springBoot与安全.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与数据库/springBoot与数据库.iml" filepath="$PROJECT_DIR$/springBoot与数据库/springBoot与数据库.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与日志/springBoot与日志.iml" filepath="$PROJECT_DIR$/springBoot与日志/springBoot与日志.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与消息队列/springBoot与消息队列.iml" filepath="$PROJECT_DIR$/springBoot与消息队列/springBoot与消息队列.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与监管/springBoot与监管.iml" filepath="$PROJECT_DIR$/springBoot与监管/springBoot与监管.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与缓存/springBoot与缓存.iml" filepath="$PROJECT_DIR$/springBoot与缓存/springBoot与缓存.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot-自定义starter/springBoot与自定义启动器-sym-componrnt/springBoot与自定义启动器-sym-componrnt.iml" filepath="$PROJECT_DIR$/springBoot-自定义starter/springBoot与自定义启动器-sym-componrnt/springBoot与自定义启动器-sym-componrnt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot-自定义starter/springBoot与自定义启动器-sym-starter/springBoot与自定义启动器-sym-starter.iml" filepath="$PROJECT_DIR$/springBoot-自定义starter/springBoot与自定义启动器-sym-starter/springBoot与自定义启动器-sym-starter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与自定义启动器-sym-test/springBoot与自定义启动器-sym-test.iml" filepath="$PROJECT_DIR$/springBoot与自定义启动器-sym-test/springBoot与自定义启动器-sym-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot与配置文件/springBoot与配置文件.iml" filepath="$PROJECT_DIR$/springBoot与配置文件/springBoot与配置文件.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springBoot-sym-starter/sym-starter.iml" filepath="$PROJECT_DIR$/springBoot-sym-starter/sym-starter.iml" />
+    </modules>
+  </component>
+</project>

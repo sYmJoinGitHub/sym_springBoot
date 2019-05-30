@@ -1,0 +1,12 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.sym.datasource.druid.DruidConfig",
+      "name": "spring.datasource",
+      "sourceMethod": "druidSource()",
+      "type": "javax.sql.DataSource"
+    }
+  ],
+  "properties": []
+}

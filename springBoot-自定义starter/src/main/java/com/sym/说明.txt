@@ -1,2 +1,0 @@
-该package下的内容是： 自定义启动器starter的测试
-其中，自定义的启动器在另外一个工程上，工程名叫“springBoot-自定义starter”

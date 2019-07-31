@@ -1,4 +1,7 @@
 package com.sym.springmvc;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class ExpandController {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(ExpandController.class);
 
     /**
      * springBoot的接收put请求等RESTful风格API
@@ -36,7 +41,8 @@ public class ExpandController {
      */
     @RequestMapping("${testMapping1:${testMapping2:/test}}")
     @ResponseBody
-    public String test(){
+    public String test(HttpServletRequest request){
+        LOGGER.info(request.getSession().getId());
         return "666666";
     }
 

@@ -14,10 +14,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class AsyncTest {
 
     @Autowired
-    private AsyncService asyncService;
+    private AsyncController asyncService;
 
     @Test
     public void testOne(){
+        asyncService.commonRun();
+    }
 
+    @Test
+    public void testTwo(){
+        asyncService.sendMail();
     }
 }

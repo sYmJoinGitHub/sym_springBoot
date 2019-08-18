@@ -2,7 +2,7 @@
 spring:
   mail:
       host: smtp.163.com
-      username: qaz542569199@163.com
-      password: qaz542569199
+      username:
+      password:
       properties:
         mail.smtp.ssl.enable: true

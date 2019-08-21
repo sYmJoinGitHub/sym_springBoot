@@ -66,7 +66,7 @@ public class MainTest {
     @Test
     public void testTwo(){
         RedisLock redisLock = new RedisLock("sym_lock");
-        boolean b = redisLock.lockWithBlock();
+        boolean b = redisLock.lockWithBlock(60);
         System.out.println(b);
     }
 
@@ -109,6 +109,21 @@ public class MainTest {
         redisTemplate.opsForValue().set("good","job",100, TimeUnit.SECONDS);
         Long expire = redisTemplate.getExpire("good");
         System.out.println(expire);
+    }
+
+    @Test
+    public void testFive(){
+        String script = "if(redis.call('set',KEYS[1],ARGV[1],ARGV[2],ARGV[3],ARGV[4]))then return 1 else return 0 end";
+        Boolean execute = (Boolean) stringRedisTemplate.execute((RedisCallback<Boolean>) connection -> {
+            Long l = connection.eval(script.getBytes(), ReturnType.INTEGER, 1, "mykey".getBytes(), "123".getBytes(), "ex".getBytes(), "60".getBytes(), "nx".getBytes());
+            return l > 0;
+        });
+        System.out.println(execute);
+    }
+
+    @Test
+    public void main(String[] args) {
+        System.out.println(new Boolean(null));
     }
 
 }

@@ -36,6 +36,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
+		<!-- springBoot的web模块 -->
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
 		<!-- springBoot发送邮件的依赖 -->
 		<dependency>
             <groupId>org.springframework.boot</groupId>

@@ -66,7 +66,7 @@ public class MainTest {
     @Test
     public void testTwo(){
         RedisLock redisLock = new RedisLock("sym_lock");
-        boolean b = redisLock.lockWithBlock(60);
+        boolean b = redisLock.lockAwait(60);
         System.out.println(b);
     }
 
@@ -81,14 +81,14 @@ public class MainTest {
             new Thread(()->{
                 try {
                     RedisLock lock = new RedisLock("sym_lock");
-                    lock.lockWithBlock();
+                    lock.lockAwait(60);
                     //System.out.println(Thread.currentThread().getName()+",已经重新唤醒...");
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }finally {
-                        lock.unLock();
+                        lock.unlock();
                     }
                 }finally {
                     latch.countDown();
@@ -121,9 +121,9 @@ public class MainTest {
         System.out.println(execute);
     }
 
-    @Test
-    public void main(String[] args) {
-        System.out.println(new Boolean(null));
+
+    public static void main(String[] args) throws InterruptedException {
+
     }
 
 }

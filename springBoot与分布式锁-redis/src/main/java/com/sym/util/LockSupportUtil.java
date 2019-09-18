@@ -17,7 +17,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * 线程阻塞工具类
  *
- * 目测有个问题，如果一个程序获取分布式锁成功后，程序死掉了，即没有在主动解锁。
+ * 目前有个问题，如果一个程序获取分布式锁成功后，程序死掉了，即没有在主动解锁。
  * 虽然此时加锁的Key可以根据过期时间自己被删除，但是在此之前正在阻塞的程序，
  * 并没有接收到释放锁的信息（它无法判断加锁key到底在不在），会一直永远阻塞下去。
  *
@@ -132,5 +132,6 @@ public class LockSupportUtil {
             throw new IllegalArgumentException("key=" + key + "未设置过期时间");
         }
     }
+
 
 }

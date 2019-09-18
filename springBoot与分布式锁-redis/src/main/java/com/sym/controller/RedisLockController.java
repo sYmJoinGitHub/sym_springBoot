@@ -14,7 +14,7 @@ public class RedisLockController {
     @RequestMapping("redis/lock")
     public String redisLockTest(){
         RedisLock redisLock = new RedisLock("sym-redis-lock");
-        redisLock.lock();
+        redisLock.lock(60);
         return "666";
     }
 

@@ -1,6 +1,7 @@
 package com.sym.service.impl;
 
-import com.sym.service.IRedisLock;
+import com.sym.service.GlobalLock;
+import com.sym.service.RedisOperations;
 import com.sym.util.LockSupportUtil;
 import com.sym.util.SpringContextUtil;
 import org.slf4j.Logger;
@@ -9,15 +10,15 @@ import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import redis.clients.jedis.exceptions.JedisNoScriptException;
 
 import java.nio.charset.Charset;
+import java.util.Random;
 import java.util.UUID;
 
 /**
  * 自己实现的分布式锁,利用redis执行lua脚本是原子性的特点,使用lua脚本来完成加锁逻辑与解锁逻辑
- *
+ * <p>
  * 加锁脚本解释：
  *      1.使用exists判断key是否存在,如果不存在,执行hmset+expire命令,表示获取到锁,lua脚本返回1(表示加锁成功)
  *      2.如果key已经存在,使用hget命令判断hash值里面的threadId是否是当前申请加锁的线程唯一标识,如果不是说明此时锁被另一个线程占用,lua脚本返回0(表示加锁失败)
@@ -27,59 +28,58 @@ import java.util.UUID;
  *      2.如果key已经存在,使用hget命令判断hash值里面的threadId是否是当前申请解锁的线程,如果不是说明当前锁不是被该线程占用,它就没资格解锁,lua脚本返回0(表示解锁失败)
  *      3.如果hash值内的threadId是当前申请解锁的线程,将hash值内的count减1,若count不等于0,说明解锁次数仍小于加锁次数,lua脚本返回0(表示解锁失败)
  *      4.若count值减1后等于0,说明解锁次数==加锁次数,删除key,并使用publish命令发布一条删除key的消息
- *
- * @Auther: shenym
- * @Date: 2019-03-25 9:56
+ * <p>
+ * Created by shenym on 2019/3/25.
  */
-public class RedisLock implements IRedisLock {
+public class RedisLock implements GlobalLock {
 
     /**
      * 加锁脚本(lua)
-     *
+     * <p>
      * 外层键 -- KEYS[1]
      * 线程ID -- KEYS[2]  ARGV[1]
      * 加锁次数 -- KEYS[3]  ARGV[2]
      * 超时时间(秒) -- ARGV[3]
      */
-    private static String lockScript =
+    private final static String LOCK_SCRIPT =
             "if(redis.call('exists',KEYS[1]) == 1) then " +
-            "  if(redis.call('hget',KEYS[1],KEYS[2]) == ARGV[1]) then " +
-            "    redis.call('hincrby',KEYS[1],KEYS[3],1) " +
-            "    redis.call('expire',KEYS[1],ARGV[3]) " +
-            "    return 1 " +
-            "  else return 0 end " +
-            "else " +
-            "  redis.call('hmset',KEYS[1],KEYS[2],ARGV[1],KEYS[3],ARGV[2])" +
-            "  redis.call('expire',KEYS[1],ARGV[3])" +
-            "  return 1 " +
-            "end";
+                    "  if(redis.call('hget',KEYS[1],KEYS[2]) == ARGV[1]) then " +
+                    "    redis.call('hincrby',KEYS[1],KEYS[3],1) " +
+                    "    redis.call('expire',KEYS[1],ARGV[3]) " +
+                    "    return 1 " +
+                    "  else return 0 end " +
+                    "else " +
+                    "  redis.call('hmset',KEYS[1],KEYS[2],ARGV[1],KEYS[3],ARGV[2])" +
+                    "  redis.call('expire',KEYS[1],ARGV[3])" +
+                    "  return 1 " +
+                    "end";
 
 
     /**
      * 解锁脚本(lua)
-     *
+     * <p>
      * 外层键 -- KEYS[1]
      * 线程ID -- KEYS[2]  ARGV[1]
      * 加锁次数 -- KEYS[3]
      */
-    private static String unLockScript =
+    private final static String UNLOCK_SCRIPT =
             "if(redis.call('exists',KEYS[1]) == 1) then " +
-            "   if(redis.call('hget',KEYS[1],KEYS[2]) == ARGV[1]) then " +
-            "       local count = redis.call('hincrby',KEYS[1],KEYS[3],-1) " +
-            "       if(count==0) then " +
-            "           redis.call('del',KEYS[1]) " +
-            "           redis.call('publish','redis-lock',KEYS[1]) " +
-            "           return 1 " +
-            "       else return 0 end " +
-            "   else return 0 end " +
-            "else return 0 end";
+                    "   if(redis.call('hget',KEYS[1],KEYS[2]) == ARGV[1]) then " +
+                    "       local count = redis.call('hincrby',KEYS[1],KEYS[3],-1) " +
+                    "       if(count==0) then " +
+                    "           redis.call('del',KEYS[1]) " +
+                    "           redis.call('publish','redis-lock',KEYS[1]) " +
+                    "           return 1 " +
+                    "       else return 0 end " +
+                    "   else return 0 end " +
+                    "else return 0 end";
 
 
     /* 加锁脚本的缓存SHA */
-    private static String lockScript_SHA;
+    private static String lockScript_sha;
 
     /* 解锁脚本的缓存SHA */
-    private static String unLockScript_SHA;
+    private static String unlockScript_sha;
 
     /* 表示此实例的加锁key */
     private String lockKey;
@@ -87,52 +87,34 @@ public class RedisLock implements IRedisLock {
     /* 表示此实例的线程ID */
     private String threadId;
 
-    private static RedisTemplate<String,String> redisTemplate;
+    private RedisOperations redisOperations;
+
+    private static boolean isInit = false;
 
     private static Charset utf8 = Charset.forName("utf-8");
 
+    private static Random random = new Random();
+
     private static final Logger LOGGER = LoggerFactory.getLogger(RedisLock.class);
 
-    static{
-        init();
-    }
-
-    private static void init(){
-        // 获取RedisTemplate实例
-        redisTemplate = (RedisTemplate)SpringContextUtil.getBean("redisTemplate");
-        // 先去redis服务器缓存脚本
-        redisTemplate.execute((RedisCallback<String>)conn->{
-            lockScript_SHA = conn.scriptLoad(lockScript.getBytes());
-            unLockScript_SHA = conn.scriptLoad(unLockScript.getBytes());
-            LOGGER.info("缓存加锁脚本：{}",lockScript_SHA);
-            LOGGER.info("缓存解锁脚本：{}",unLockScript_SHA);
-            return null;
-        });
-    }
-
-    private RedisLock(){
-
-    }
+    private RedisLock() {}
 
     public RedisLock(String lockKey){
-        Assert.hasLength(lockKey,"key must not be null");
+        this(lockKey,new DefaultRedisOperations());
+    }
+
+    public RedisLock(String lockKey,RedisOperations redisOperations) {
+        Assert.hasLength(lockKey, "key must not be null");
         this.lockKey = lockKey;
         this.threadId = getThreadId();
+        this.redisOperations = redisOperations;
+        if( !isInit ){
+            // 在未初始化时，缓存脚本
+            this.cacheScript();
+            RedisLock.isInit = true;
+        }
     }
 
-    private String getThreadId(){
-        return UUID.randomUUID().toString().replace("-","").concat(System.currentTimeMillis()+"");
-    }
-
-
-    /**
-     * 加锁 默认存活时间60s
-     * @return
-     */
-    @Override
-    public boolean lock() {
-        return lock(60);
-    }
 
     /**
      * 加锁
@@ -141,19 +123,10 @@ public class RedisLock implements IRedisLock {
      * @return true表示加锁成功，false表示加锁失败
      */
     @Override
-    public boolean lock(int ttlTime) {
-        return tryLock(ttlTime);
+    public boolean lock(Integer ttlTime) {
+        return tryRequire(ttlTime);
     }
 
-    /**
-     * 加锁，并且未获取到锁时阻塞
-     *
-     * @return true表示加锁成功，false表示加锁失败
-     */
-    @Override
-    public boolean lockWithBlock() {
-        return lockWithBlock(60);
-    }
 
     /**
      * 加锁，并且未获取到锁时阻塞
@@ -162,13 +135,13 @@ public class RedisLock implements IRedisLock {
      * @return true表示加锁成功，false表示加锁失败
      */
     @Override
-    public boolean lockWithBlock(int ttlTime) {
-        for(;;){
-            if( lock(ttlTime) )
+    public boolean lockAwait(Integer ttlTime) {
+        for (; ; ) {
+            if (lock(ttlTime))
                 return true;
             else {
                 try {
-                    // 线程在此阻塞
+                    // 线程在此等待
                     LockSupportUtil.park(lockKey);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -179,90 +152,130 @@ public class RedisLock implements IRedisLock {
     }
 
     /**
-     * 解锁
+     * 加锁，并且未获取到锁时阻塞
+     *
+     * @param lockTime 加锁时间
+     * @param waitTime 阻塞等待时间
      * @return
      */
     @Override
-    public boolean unLock() {
-        return release();
+    public boolean lockAwait(Integer lockTime, Integer waitTime) {
+        // todo
+        return false;
     }
 
     /**
-     * 实际加锁方法 Distributed
-     * @param ttlTime
+     * 解锁
+     *
      * @return
      */
-    private boolean tryLock(int ttlTime){
-        Boolean result = false;
-        byte[] lockKeyBytes = lockKey.getBytes(utf8);
-        byte[] uuidBytes = "uuid".getBytes(utf8);
-        byte[] countBytes = "count".getBytes(utf8);
-        byte[] threadIdBytes = threadId.getBytes(utf8);
-        byte[] bytes = "1".getBytes(utf8);
-        byte[] ttlTimeBytes = Integer.toString(ttlTime).getBytes(utf8);
+    @Override
+    public boolean unlock() {
+        return tryRelease();
+    }
+
+
+    /**
+     * 暴力解锁
+     */
+    @Override
+    public void forceUnlock() {
+        redisOperations.del(lockKey);
+        // 唤醒所有线程
+    }
+
+
+    /**
+     * 生成当前线程的唯一标识符
+     * @return
+     */
+    private String getThreadId() {
+        String threadId = UUID.randomUUID().toString().replace("-", "")
+                .concat(String.valueOf(System.currentTimeMillis() + random.nextLong()));
+        LOGGER.info("生成的线程标识符：{}", threadId);
+        return threadId;
+    }
+
+
+    /**
+     * 缓存脚本
+     */
+    private void cacheScript(){
+        lockScript_sha = this.redisOperations.loadScript(LOCK_SCRIPT);
+        unlockScript_sha = this.redisOperations.loadScript(UNLOCK_SCRIPT);
+    }
+
+
+    /**
+     * 尝试获取锁资源
+     *
+     * @param ttlTime 加锁时间
+     * @return true-获得锁,false-未获取到锁
+     */
+    private boolean tryRequire(Integer ttlTime) {
+        boolean result = false;
         try {
-            result = redisTemplate.execute((RedisCallback<Boolean>)conn->{
-                // 尝试加锁
-                Long o = conn.evalSha(lockScript_SHA, ReturnType.INTEGER, 3, lockKeyBytes, uuidBytes,
-                        countBytes, threadIdBytes, bytes, ttlTimeBytes);
-                if(o == 1L) {
-                    LOGGER.info("thead {},获取到锁-{}",Thread.currentThread().getName(),lockKey);
-                    return true;
-                }
-                return false;
-            });
-        }catch (Exception e){
+            result =  doLock(ttlTime);
+        } catch (Exception e) {
             Throwable cause = e.getCause();
-            if( cause instanceof JedisNoScriptException){
-                //由于redis的脚本缓存被清空了,直接使用脚本执行
-                result = redisTemplate.execute((RedisCallback<Boolean>)conn->{
-                    Long evalResult = conn.eval(lockScript.getBytes(utf8), ReturnType.INTEGER, 3, lockKeyBytes, uuidBytes,
-                            countBytes, threadIdBytes, bytes, ttlTimeBytes);
-                    if(evalResult == 1L) {
-                        LOGGER.info("thead {},获取到锁-{}",Thread.currentThread().getName(),lockKey);
-                        return true;
-                    }
-                    return false;
-                });
-            }else {
-                LOGGER.error("加锁异常，原因：{}",e.getMessage());
+            if (cause instanceof JedisNoScriptException) {
+                //由于redis的脚本缓存被清空了,重新缓存脚本
+                cacheScript();
+                //重新申请锁
+                result = doLock(ttlTime);
+            } else {
+                LOGGER.error("加锁异常，原因：{}", e.getMessage());
             }
         }
-        // 有可能执行完 redisTemplate.execute()后返回null
-        return result == null?false:result;
+        return result;
+    }
+
+
+    /**
+     * 尝试释放锁资源
+     *
+     * @return true-解锁成功,false-解锁失败
+     */
+    private boolean tryRelease() {
+        boolean result = false;
+        try {
+            result = this.doUnlock();
+        } catch (Exception e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof JedisNoScriptException) {
+                //由于redis的脚本缓存被清空了,重新缓存脚本
+                cacheScript();
+                //重新申请锁
+                result = this.doUnlock();
+            } else {
+                LOGGER.error("解锁异常，原因：{}", e.getMessage());
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * 实际加锁逻辑
+     * @param ttlTime 加锁时间
+     * @return true-获得锁,false-未获取到锁
+     */
+    private boolean doLock(Integer ttlTime){
+        Boolean result = redisOperations.evalSha(lockScript_sha,3,lockKey, "uuid", "count", threadId, "1", Integer.toString(ttlTime));
+        boolean f = result == null ? false : result;
+        if( f ) LOGGER.info("线程[{}]获取到锁[{}]",Thread.currentThread().getName(),lockKey);
+        return f;
     }
 
 
     /**
      * 实际解锁逻辑
-     * @return
+     * @return true-解锁成功,false-解锁失败
      */
-    private boolean release(){
-        Boolean result = false;
-        byte[] lockKeyBytes = lockKey.getBytes(utf8);
-        byte[] uuidBytes = "uuid".getBytes(utf8);
-        byte[] countBytes = "count".getBytes(utf8);
-        byte[] threadIdBytes = threadId.getBytes(utf8);
-        try {
-            result = redisTemplate.execute((RedisCallback<Boolean>)conn->{
-                // 尝试解锁
-                Long o = conn.evalSha(unLockScript_SHA,ReturnType.INTEGER,3,lockKeyBytes, uuidBytes,
-                        countBytes,threadIdBytes);
-                return o == 1L;
-            });
-        }catch (Exception e){
-            Throwable cause = e.getCause();
-            if( cause instanceof JedisNoScriptException){
-                //由于redis的脚本缓存被清空了,直接使用脚本执行
-                result = redisTemplate.execute((RedisCallback<Boolean>)conn->{
-                    Long evalResult = conn.eval(unLockScript.getBytes(utf8), ReturnType.INTEGER, 3, lockKeyBytes, uuidBytes,
-                            countBytes, threadIdBytes);
-                    return evalResult == 1L;
-                });
-            }else {
-                LOGGER.error("解锁异常，原因：{}",e.getMessage());
-            }
-        }
-        return result == null?false:result;
+    private boolean doUnlock(){
+        Boolean result = redisOperations.evalSha(unlockScript_sha,3,lockKey, "uuid", "count", threadId);
+        boolean f = result == null ? false : result;
+        if( f ) LOGGER.info("线程[{}]已成功解锁[{}]",Thread.currentThread().getName(),lockKey);
+        return f;
     }
 }

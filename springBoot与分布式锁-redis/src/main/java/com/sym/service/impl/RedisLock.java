@@ -91,8 +91,6 @@ public class RedisLock implements GlobalLock {
 
     private static boolean isInit = false;
 
-    private static Charset utf8 = Charset.forName("utf-8");
-
     private static Random random = new Random();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RedisLock.class);
@@ -137,12 +135,12 @@ public class RedisLock implements GlobalLock {
     @Override
     public boolean lockAwait(Integer ttlTime) {
         for (; ; ) {
-            if (lock(ttlTime))
+            if (tryRequire(ttlTime))
                 return true;
             else {
                 try {
                     // 线程在此等待
-                    LockSupportUtil.park(lockKey);
+                    LockSupportUtil.park(lockKey,this);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     return false;
@@ -160,8 +158,18 @@ public class RedisLock implements GlobalLock {
      */
     @Override
     public boolean lockAwait(Integer lockTime, Integer waitTime) {
-        // todo
-        return false;
+        if( tryRequire(lockTime) ){
+            // 如果能获取到分布式锁，就立即返回
+            return true;
+        }else{
+            // 否则在此阻塞等待 waitTime 秒
+            try {
+                LockSupportUtil.park(lockKey,waitTime,this);
+            } catch (InterruptedException e) {
+                LOGGER.error("当前线程被中断：{}",Thread.currentThread());
+            }
+            return false;
+        }
     }
 
     /**

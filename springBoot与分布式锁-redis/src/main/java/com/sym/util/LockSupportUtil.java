@@ -2,16 +2,18 @@ package com.sym.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
 /**
@@ -30,21 +32,35 @@ public class LockSupportUtil {
     private final static Logger LOGGER = LoggerFactory.getLogger(LockSupportUtil.class);
 
     /* 保存分布式锁的Key和对应的线程信息 */
-    private static Map<String, Set<Thread>> threadMap = new ConcurrentHashMap<>();
+    private static final Map<String, Set<Thread>> threadMap = new ConcurrentHashMap<>();
 
     private static RedisTemplate redisTemplate = (RedisTemplate) SpringContextUtil.getBean("redisTemplate");
 
     /* 定时任务线程池 */
-    private ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(5);
+    private static ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(5);
+
+    static{
+        timedTask();
+        /*
+         * 在JVM关闭的时候，关掉线程池
+         */
+        Runtime.getRuntime().addShutdownHook(new Thread(){
+            @Override
+            public void run() {
+                threadPool.shutdown();
+            }
+        });
+    }
 
     /**
      * 挂起当前线程
      *
      * @param key     分布式锁key
      * @param blocker 阻塞对象
-     * @throws InterruptedException
+     * @throws InterruptedException 线程中断异常
+     * @throws RedisConnectionFailureException redis连接异常
      */
-    public static void park(String key, Object blocker) throws InterruptedException {
+    public static void park(String key, Object blocker) throws InterruptedException,RedisConnectionFailureException {
         park(key, null, blocker);
     }
 
@@ -57,7 +73,8 @@ public class LockSupportUtil {
      * @param blocker  阻塞对象
      * @throws InterruptedException
      */
-    public static void park(String key, Integer waitTime, Object blocker) throws InterruptedException {
+    public static void park(String key, Integer waitTime, Object blocker)
+            throws InterruptedException,RedisConnectionFailureException {
         // 校验key的合法性
         LockSupportUtil.verifyKey(key);
         // 获取当前线程
@@ -79,6 +96,10 @@ public class LockSupportUtil {
         if (t.isInterrupted()) {
             throw new InterruptedException(t.getName() + " is interrupted");
         }
+        // 如果redis连接异常
+        if( !checkAlive() ){
+            throw new RedisConnectionFailureException("redis connection failed");
+        }
     }
 
     /**
@@ -87,7 +108,7 @@ public class LockSupportUtil {
      * @param key 分布式锁Key
      * @throws InterruptedException 线程中断异常
      */
-    public synchronized static void unPark(String key) {
+    public static void unPark(String key) {
         if (!threadMap.containsKey(key)) {
             LOGGER.info("threadMap 未保存key={},不唤醒任何线程", key);
             return;
@@ -98,12 +119,31 @@ public class LockSupportUtil {
             LOGGER.info("此key={}未阻塞任何线程", key);
             return;
         }
-        // 遍历集合重新唤醒线程
-        for (Thread t : threadSet) {
-            LockSupport.unpark(t);
+        synchronized ( threadMap ){
+            // 遍历集合重新唤醒线程
+            for (Thread t : threadSet) {
+                LockSupport.unpark(t);
+            }
+            threadSet = null; //help gc
+            threadMap.remove(key);
         }
-        threadSet = null; //help gc
-        threadMap.remove(key);
+    }
+
+
+    /**
+     * 唤醒所有的线程
+     */
+    public synchronized static void unParkAll(){
+        if( threadMap.isEmpty() ){
+            return;
+        }
+        for( Map.Entry<String, Set<Thread>> entry : threadMap.entrySet() ){
+            Set<Thread> value = entry.getValue();
+            for( Thread t : value ){
+                LockSupport.unpark(t);
+            }
+        }
+        threadMap.clear();
     }
 
 
@@ -113,12 +153,12 @@ public class LockSupportUtil {
      * @param key 分布式锁key
      * @param t   线程
      */
-    private static void addThread(String key, Thread t) {
+    private synchronized static void addThread(String key, Thread t) {
         if (threadMap.containsKey(key)) {
-            LOGGER.info("threadMap include [{}],add thread [{}]", key, t.getName());
+            //LOGGER.info("threadMap include [{}],add thread [{}]", key, t.getName());
             threadMap.get(key).add(t);
         } else {
-            LOGGER.info("threadMap not include [{}],init and and thread [{}]", key, t.getName());
+            //LOGGER.info("threadMap not include [{}],init and and thread [{}]", key, t.getName());
             Set<Thread> set = new HashSet<>();
             set.add(t);
             threadMap.put(key, set);
@@ -145,10 +185,76 @@ public class LockSupportUtil {
 
 
     /**
-     * 校验redis是否凑存活
+     * redis连接心跳校验
+     * @return true-连接redis成功,false-连接redis失败
      */
-    private void checkAlive(){
-        Properties info = redisTemplate.getConnectionFactory().getConnection().info();
+    private static boolean checkAlive(){
+        boolean result = false;
+        try {
+            String ping = redisTemplate.getConnectionFactory().getConnection().ping();
+            LOGGER.info("redis心跳校验：{}",ping);
+            result = true;
+        }catch (RedisConnectionFailureException e){
+            // redis连接失败
+            LOGGER.error("无法连接到redis[{}]",e.getMessage());
+        }
+        return result;
     }
+
+
+    /**
+     * 周期性任务
+     */
+    private static void timedTask(){
+
+        /**
+         * 每隔一分钟校验redis的存活时间
+         */
+        threadPool.scheduleAtFixedRate(()->{
+            if( !checkAlive() ) unParkAll();
+        },1,1, TimeUnit.MINUTES);
+
+
+        /**
+         * 每隔两分钟轮询key的有效性
+         */
+        threadPool.scheduleAtFixedRate(()->{
+            if( threadMap.isEmpty() ) return;
+            Iterator<Map.Entry<String, Set<Thread>>> iterator = threadMap.entrySet().iterator();
+            while( iterator.hasNext() ){
+                Map.Entry<String, Set<Thread>> entry = iterator.next();
+                try {
+                    Long expire = redisTemplate.getExpire(entry.getKey());
+                    if( expire == -2L ){ // 表示key已被过期删除掉
+                        Set<Thread> threadSet = entry.getValue();
+                        if( null != threadSet && !threadSet.isEmpty() ){
+                            // 唤醒此key下的所有线程
+                            threadPool.execute(() -> {
+                                synchronized ( threadMap ){
+                                    Set<Thread> threads = entry.getValue();
+                                    // 遍历集合重新唤醒线程
+                                    for (Thread t : threads) {
+                                        LockSupport.unpark(t);
+                                    }
+                                    threads = null; //help gc
+                                    iterator.remove();
+                                }
+                            });
+                        }
+                    }
+                }catch (RedisConnectionFailureException e){
+                    // redis连接失败
+                    LOGGER.error("无法连接到redis[{}],将唤醒所有的阻塞线程",e.getMessage());
+                    unParkAll();
+                    break; // 退出循环
+                }
+            }
+        },1,2,TimeUnit.MINUTES);
+
+
+    }
+
+
+
 
 }

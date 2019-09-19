@@ -64,7 +64,7 @@ public class MainTest {
      *
      */
     @Test
-    public void testTwo(){
+    public void testTwo() throws InterruptedException {
         RedisLock redisLock = new RedisLock("sym_lock");
         boolean b = redisLock.lockAwait(60);
         System.out.println(b);
@@ -90,7 +90,9 @@ public class MainTest {
                     }finally {
                         lock.unlock();
                     }
-                }finally {
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
                     latch.countDown();
                 }
             },"线程"+(i+1)).start();
@@ -121,9 +123,37 @@ public class MainTest {
         System.out.println(execute);
     }
 
+    @Test
+    public void testSix() throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(3);
 
-    public static void main(String[] args) throws InterruptedException {
 
+        // 开启两个线程抢夺分布式锁，然后将redis关闭（模拟redis崩了）或者 key删除（模拟抢到锁的程序崩了）
+        // 查看被阻塞的线程能否被重新唤醒
+        new Thread(()->{
+            try {
+                RedisLock redisLock = new RedisLock("sym_lock_123");
+                redisLock.lockAwait(200);
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                latch.countDown();
+            }
+        }).start();
+
+        new Thread(()->{
+            try {
+                RedisLock redisLock = new RedisLock("sym_lock_123");
+                redisLock.lockAwait(200);
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                latch.countDown();
+            }
+        }).start();
+
+        latch.await();
     }
-
 }

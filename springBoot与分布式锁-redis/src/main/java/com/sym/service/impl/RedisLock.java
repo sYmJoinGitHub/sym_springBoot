@@ -3,16 +3,12 @@ package com.sym.service.impl;
 import com.sym.service.GlobalLock;
 import com.sym.service.RedisOperations;
 import com.sym.util.LockSupportUtil;
-import com.sym.util.SpringContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.connection.ReturnType;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.util.Assert;
 import redis.clients.jedis.exceptions.JedisNoScriptException;
 
-import java.nio.charset.Charset;
 import java.util.Random;
 import java.util.UUID;
 
@@ -133,16 +129,15 @@ public class RedisLock implements GlobalLock {
      * @return true表示加锁成功，false表示加锁失败
      */
     @Override
-    public boolean lockAwait(Integer ttlTime) {
-        for (; ; ) {
+    public boolean lockAwait(Integer ttlTime) throws InterruptedException{
+        for (;;) {
             if (tryRequire(ttlTime))
                 return true;
             else {
                 try {
                     // 线程在此等待
                     LockSupportUtil.park(lockKey,this);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch ( RedisConnectionFailureException e){
                     return false;
                 }
             }
@@ -157,18 +152,22 @@ public class RedisLock implements GlobalLock {
      * @return
      */
     @Override
-    public boolean lockAwait(Integer lockTime, Integer waitTime) {
+    public boolean lockAwait(Integer lockTime, Integer waitTime) throws InterruptedException{
         if( tryRequire(lockTime) ){
             // 如果能获取到分布式锁，就立即返回
             return true;
         }else{
-            // 否则在此阻塞等待 waitTime 秒
             try {
+                /*
+                 * 当前线程在此等待 waitTime 秒。如果时间到了，还没被唤醒
+                 * 或者等待时间还没到，但是被唤醒了，则尝试一次抢锁
+                 */
                 LockSupportUtil.park(lockKey,waitTime,this);
-            } catch (InterruptedException e) {
-                LOGGER.error("当前线程被中断：{}",Thread.currentThread());
+                return tryRequire(lockTime);
+            } catch (RedisConnectionFailureException e) {
+                // redis挂掉了
+                return false;
             }
-            return false;
         }
     }
 
@@ -188,8 +187,9 @@ public class RedisLock implements GlobalLock {
      */
     @Override
     public void forceUnlock() {
+        // 直接删除key,并且唤醒所有的线程
         redisOperations.del(lockKey);
-        // 唤醒所有线程
+        LockSupportUtil.unParkAll();
     }
 
 

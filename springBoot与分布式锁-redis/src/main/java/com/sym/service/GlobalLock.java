@@ -21,7 +21,7 @@ public interface GlobalLock {
      * @param lockTime 加锁时间(单位：秒)
      * @return
      */
-    boolean lockAwait(Integer lockTime);
+    boolean lockAwait(Integer lockTime) throws InterruptedException;
 
 
     /**
@@ -30,7 +30,7 @@ public interface GlobalLock {
      * @param waitTime 阻塞等待时间(单位：秒)
      * @return
      */
-    boolean lockAwait(Integer lockTime,Integer waitTime);
+    boolean lockAwait(Integer lockTime,Integer waitTime) throws InterruptedException;
 
 
     /**

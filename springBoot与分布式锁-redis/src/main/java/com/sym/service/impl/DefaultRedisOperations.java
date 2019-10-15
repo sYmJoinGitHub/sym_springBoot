@@ -1,7 +1,9 @@
 package com.sym.service.impl;
 
 import com.sym.service.RedisOperations;
-import com.sym.util.SpringContextUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -10,18 +12,21 @@ import org.springframework.util.Assert;
 import java.nio.charset.Charset;
 
 /**
- * 默认的实现类
+ * 与redis交互实现分布式锁的接口{@link RedisOperations}的默认实现类
  *
  * Created by shenym on 2019/9/18.
  */
 public class DefaultRedisOperations implements RedisOperations {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(DefaultRedisOperations.class);
+
     private StringRedisTemplate redisTemplate;
 
     private Charset charset = Charset.forName("utf-8");
 
-    public DefaultRedisOperations() {
-        redisTemplate = SpringContextUtil.getBean(StringRedisTemplate.class);
+    public DefaultRedisOperations(StringRedisTemplate stringRedisTemplate) {
+        Assert.notNull(stringRedisTemplate,"stringRedisTemplate不能为空");
+        redisTemplate = stringRedisTemplate;
     }
 
     /**
@@ -65,5 +70,35 @@ public class DefaultRedisOperations implements RedisOperations {
     @Override
     public void del(String key) {
         redisTemplate.delete(key);
+    }
+
+
+    /**
+     * redis心跳检测
+     * @return true-redis可连可用, false-连接失败
+     */
+    @Override
+    public boolean pong() {
+        boolean result = false;
+        try {
+            String ping = redisTemplate.getConnectionFactory().getConnection().ping();
+            LOGGER.info("redis心跳校验：{}",ping);
+            result = true;
+        }catch (RedisConnectionFailureException e){
+            // redis连接失败
+            LOGGER.error("无法连接到redis[{}]",e.getMessage());
+        }
+        return result;
+    }
+
+
+    /**
+     * 获取锁的存活时间
+     * @param key 锁的key
+     * @return 剩余存活时间
+     */
+    @Override
+    public long getExpire(String key) {
+        return redisTemplate.getExpire(key);
     }
 }

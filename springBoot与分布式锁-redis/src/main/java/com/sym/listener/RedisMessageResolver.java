@@ -1,11 +1,12 @@
 package com.sym.listener;
 
-import com.sym.util.LockSupportUtil;
+import com.sym.service.AbstractMapSynchronizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 处理加锁Key被释放后 / key过期 。 redis发出的消息
+ * springBoot 1.x 当监听到redis通道内的消息时, 就会调用此方法来处理
+ * @see RedisMessageListener
  *
  * Created by 沈燕明 on 2019/5/29 17:47.
  */
@@ -19,6 +20,6 @@ public class RedisMessageResolver {
      */
     public void handlerMessage(String message){
         logger.info("从通道中监听到的消息={}",message);
-        LockSupportUtil.unPark(message);
+        AbstractMapSynchronizer.unpark(message);
     }
 }

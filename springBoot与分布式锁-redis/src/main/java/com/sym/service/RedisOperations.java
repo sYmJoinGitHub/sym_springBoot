@@ -30,4 +30,19 @@ public interface RedisOperations {
      */
     void del(String key);
 
+
+    /**
+     * redis心跳检测
+     * @return true-redis可连可用, false-连接失败
+     */
+    boolean pong();
+
+
+    /**
+     * 获取锁的存活时间
+     * @param key 锁的key
+     * @return 剩余存活时间
+     */
+    long getExpire(String key);
+
 }

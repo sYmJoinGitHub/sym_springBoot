@@ -1,5 +1,6 @@
 package com.sym;
 
+import com.sym.service.impl.DefaultRedisOperations;
 import com.sym.service.impl.RedisLock;
 import com.sym.util.SpringContextUtil;
 import org.junit.Test;
@@ -11,110 +12,87 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @Auther: shenym
- * @Date: 2019-03-20 15:53
- */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class MainTest {
 
     @Autowired
-    private RedisTemplate stringRedisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     /**
-     * 加锁方法测试
+     * 测试脚本, 直接加锁
      */
     @Test
-    public void testOne(){
-        stringRedisTemplate.execute(new RedisCallback<Boolean>() {
-
-            @Override
-            public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
-         String lock = "if(redis.call('exists',KEYS[1]) == 1) then ";
-                lock += "if(redis.call('hget',KEYS[1],KEYS[2]) == ARGV[1]) then ";
-                lock += "redis.call('hincrby',KEYS[1],KEYS[3],1) ";
-                lock += "redis.call('expire',KEYS[1],60) ";
-                lock += "return 1 ";
-                lock += "else return 0 end ";
-                lock += "else redis.call('hmset',KEYS[1],KEYS[2],ARGV[1],KEYS[3],ARGV[2]) ";
-                lock += "redis.call('expire',KEYS[1],60) ";
-                lock += "return 1 end";
-
-
-                long id = Thread.currentThread().getId();
-                String threadId = String.valueOf(id);
-
-                Object o = connection.eval(lock.getBytes(), ReturnType.INTEGER, 3, "hash_lock".getBytes(), "threadID".getBytes(), "count".getBytes(),
-                        "2".getBytes(), "1".getBytes());
-                Integer result = Integer.parseInt(String.valueOf(o));
-                if( result == 1 )System.out.println("加锁成功");
-                if( result == 0 )System.out.println("加锁失败");
-                return false;
-            }
+    public void testOne() {
+        stringRedisTemplate.execute((RedisCallback<Boolean>) connection -> {
+            String lock = "if(redis.call('exists',KEYS[1]) == 1) then ";
+            lock += "if(redis.call('hget',KEYS[1],KEYS[2]) == ARGV[1]) then ";
+            lock += "redis.call('hincrby',KEYS[1],KEYS[3],1) ";
+            lock += "redis.call('expire',KEYS[1],60) ";
+            lock += "return 1 ";
+            lock += "else return 0 end ";
+            lock += "else redis.call('hmset',KEYS[1],KEYS[2],ARGV[1],KEYS[3],ARGV[2]) ";
+            lock += "redis.call('expire',KEYS[1],60) ";
+            lock += "return 1 end";
+            Object o = connection.eval(lock.getBytes(), ReturnType.INTEGER, 3, "hash_lock".getBytes(), "threadID".getBytes(), "count".getBytes(),
+                    "2".getBytes(), "1".getBytes());
+            int result = Integer.parseInt(String.valueOf(o));
+            if (result == 1) System.out.println("加锁成功");
+            if (result == 0) System.out.println("加锁失败");
+            return false;
         });
     }
 
     /**
-     *
+     * 测试分布式锁的 lock() 方法, 此方法会立即返回结果
      */
     @Test
     public void testTwo() throws InterruptedException {
-        RedisLock redisLock = new RedisLock("sym_lock");
-        boolean b = redisLock.lockAwait(60);
-        System.out.println(b);
+        final CountDownLatch latch = new CountDownLatch(3);
+        for( int i=0; i<3 ;i++ ){
+            new Thread(()->{
+                RedisLock redisLock = new RedisLock("sym",new DefaultRedisOperations(stringRedisTemplate));
+                boolean b = redisLock.lock(10);
+                System.out.println(Thread.currentThread()+", 夺锁结果："+b);
+                latch.countDown();// 这边只是为了测试, 实际运用要放到finally块中
+            }).start();
+        }
+        latch.await();
     }
 
 
+
     /**
-     * 测试以阻塞的方式获取锁
+     * 测试分布式锁的 lockAwait() 方法, 此方法会一直阻塞
      */
     @Test
-    public void testThree(){
-        final CountDownLatch latch = new CountDownLatch(3);
-        for( int i=0;i<5;i++ ){
-            new Thread(()->{
+    public void testThree() throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(1);
+        for (int i = 0; i < 3; i++) {
+            new Thread(() -> {
                 try {
                     RedisLock lock = new RedisLock("sym_lock");
                     lock.lockAwait(60);
                     //System.out.println(Thread.currentThread().getName()+",已经重新唤醒...");
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }finally {
-                        lock.unlock();
-                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                } finally {
-                    latch.countDown();
                 }
-            },"线程"+(i+1)).start();
+            }, "线程" + (i + 1)).start();
         }
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        latch.await();
     }
 
 
-    @Test
-    public void testFour(){
-        RedisTemplate redisTemplate = (RedisTemplate) SpringContextUtil.getBean("redisTemplate");
-        redisTemplate.opsForValue().set("good","job",100, TimeUnit.SECONDS);
-        Long expire = redisTemplate.getExpire("good");
-        System.out.println(expire);
-    }
+
 
     @Test
-    public void testFive(){
+    public void testFive() {
         String script = "if(redis.call('set',KEYS[1],ARGV[1],ARGV[2],ARGV[3],ARGV[4]))then return 1 else return 0 end";
         Boolean execute = (Boolean) stringRedisTemplate.execute((RedisCallback<Boolean>) connection -> {
             Long l = connection.eval(script.getBytes(), ReturnType.INTEGER, 1, "mykey".getBytes(), "123".getBytes(), "ex".getBytes(), "60".getBytes(), "nx".getBytes());
@@ -130,7 +108,7 @@ public class MainTest {
 
         // 开启两个线程抢夺分布式锁，然后将redis关闭（模拟redis崩了）或者 key删除（模拟抢到锁的程序崩了）
         // 查看被阻塞的线程能否被重新唤醒
-        new Thread(()->{
+        new Thread(() -> {
             try {
                 RedisLock redisLock = new RedisLock("sym_lock_123");
                 redisLock.lockAwait(200);
@@ -142,7 +120,7 @@ public class MainTest {
             }
         }).start();
 
-        new Thread(()->{
+        new Thread(() -> {
             try {
                 RedisLock redisLock = new RedisLock("sym_lock_123");
                 redisLock.lockAwait(200);

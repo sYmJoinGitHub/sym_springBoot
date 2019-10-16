@@ -88,7 +88,7 @@ public abstract class AbstractMapSynchronizer implements ILock {
      */
     @Override
     public void lockAwait(int lockTime) throws InterruptedException {
-        startTimeTaskIfNeccssary();
+        startTimeTaskIfNecessary();
         Thread t = Thread.currentThread();
         for(;;){
             /*
@@ -104,7 +104,7 @@ public abstract class AbstractMapSynchronizer implements ILock {
                  if( shouldParkByVerifyKey(lockKey) && addToMap(lockKey, t) ){
                      LockSupport.park(this);
                      if( Thread.interrupted() ) throw new InterruptedException();
-                     if( !redisOperations.pong() ) throw new RuntimeException("");
+                     if( !redisOperations.pong() ) throw new RuntimeException("redis宕机, 程序返回");
                  }
              }
         }
@@ -119,7 +119,7 @@ public abstract class AbstractMapSynchronizer implements ILock {
      */
     @Override
     public void lockAwait(int lockTime, long waitTime, TimeUnit timeUnit) throws InterruptedException {
-        startTimeTaskIfNeccssary();
+        startTimeTaskIfNecessary();
         long needTime = timeUnit.toNanos(waitTime); // 用户指定等待的时间数(纳秒)
         long deadTime = needTime + System.nanoTime(); // 当前时间点+用户指定等待的时间数(纳秒), 表示此方法需要返回的最后时间点
         Thread t = Thread.currentThread();
@@ -203,14 +203,16 @@ public abstract class AbstractMapSynchronizer implements ILock {
     private boolean addToMap(String key, Thread t) {
         boolean f = false;
         try {
-            if (threadMap.containsKey(key)) {
-                threadMap.get(key).add(t);
-            } else {
-                Set<Thread> set = new HashSet<>();
-                set.add(t);
-                threadMap.put(key, set);
+            synchronized (threadMap){
+                if (threadMap.containsKey(key)) {
+                    threadMap.get(key).add(t);
+                } else {
+                    Set<Thread> set = new HashSet<>();
+                    set.add(t);
+                    threadMap.put(key, set);
+                }
+                f = true;
             }
-            f = true;
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -240,7 +242,7 @@ public abstract class AbstractMapSynchronizer implements ILock {
      * 是否需要启动定时任务
      * @return true-需要, false-不需要
      */
-    private void startTimeTaskIfNeccssary(){
+    private void startTimeTaskIfNecessary(){
         /*
          * 记录下这边的意思：
          * 第一个判断：!isStarted.get(), 如果已经启动了, 即结果为false, 方法直接结束;
@@ -265,7 +267,7 @@ public abstract class AbstractMapSynchronizer implements ILock {
                 LOGGER.warn("redis宕机, 将唤醒所有阻塞线程...");
                 unparkAll();
             }
-        },1,1, TimeUnit.MINUTES);
+        },1,30, TimeUnit.SECONDS);
 
         /*
          * 每隔两分钟轮询key的有效性
@@ -281,6 +283,7 @@ public abstract class AbstractMapSynchronizer implements ILock {
                         synchronized (AbstractMapSynchronizer.class){
                             Set<Thread> threadSet = entry.getValue();
                             if( threadSet == null || threadSet.isEmpty() ) return;
+                            LOGGER.warn("检测到分布式锁[{}]已失效, 将唤醒相应线程集", entry.getKey());
                             // 唤醒此key下的所有线程
                             for (Thread t : threadSet) {
                                 LockSupport.unpark(t);
@@ -295,7 +298,7 @@ public abstract class AbstractMapSynchronizer implements ILock {
                     break; // 退出循环
                 }
             }
-        },1,2,TimeUnit.MINUTES);
+        },1,1,TimeUnit.MINUTES);
     }
 
 }

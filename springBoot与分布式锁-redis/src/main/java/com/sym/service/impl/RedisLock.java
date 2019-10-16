@@ -79,7 +79,7 @@ public class RedisLock extends AbstractMapSynchronizer {
     private static String unlockScript_sha;
 
     /* 标识：是否已经进行脚本缓存初始化 */
-    private static boolean isInit = false;
+    private static volatile boolean isInit = false;
 
     /* 表示此实例的线程ID */
     private String threadId;

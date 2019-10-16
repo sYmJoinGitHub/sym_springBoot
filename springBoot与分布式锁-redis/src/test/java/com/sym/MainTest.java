@@ -79,7 +79,7 @@ public class MainTest {
                 try {
                     RedisLock lock = new RedisLock("sym_lock");
                     lock.lockAwait(60);
-                    //System.out.println(Thread.currentThread().getName()+",已经重新唤醒...");
+                    System.out.println(Thread.currentThread().getName()+",已经重新唤醒...");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -89,18 +89,45 @@ public class MainTest {
     }
 
 
+    /**
+     * 测试分布式锁的 lockAwait() 方法, 此方法可以超时等待
+     */
+    @Test
+    public void testFour() throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(1);
+        for (int i = 0; i < 3; i++) {
+            new Thread(() -> {
+                try {
+                    RedisLock lock = new RedisLock("sym_lock");
+                    lock.lockAwait(60, 30, TimeUnit.SECONDS);
+                    System.out.println(Thread.currentThread().getName()+",已经重新唤醒...");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }, "线程" + (i + 1)).start();
+        }
+        latch.await();
+    }
 
 
+    /**
+     * redis脚本测试
+     */
     @Test
     public void testFive() {
         String script = "if(redis.call('set',KEYS[1],ARGV[1],ARGV[2],ARGV[3],ARGV[4]))then return 1 else return 0 end";
-        Boolean execute = (Boolean) stringRedisTemplate.execute((RedisCallback<Boolean>) connection -> {
+        Boolean execute = stringRedisTemplate.execute((RedisCallback<Boolean>) connection -> {
             Long l = connection.eval(script.getBytes(), ReturnType.INTEGER, 1, "mykey".getBytes(), "123".getBytes(), "ex".getBytes(), "60".getBytes(), "nx".getBytes());
             return l > 0;
         });
         System.out.println(execute);
     }
 
+
+    /**
+     * 实际环境测试
+     * @throws InterruptedException
+     */
     @Test
     public void testSix() throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(3);
@@ -111,8 +138,8 @@ public class MainTest {
         new Thread(() -> {
             try {
                 RedisLock redisLock = new RedisLock("sym_lock_123");
-                redisLock.lockAwait(200);
-                Thread.sleep(10000);
+                redisLock.lockAwait(2000);
+                System.out.println("重新唤醒...");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {
@@ -123,14 +150,39 @@ public class MainTest {
         new Thread(() -> {
             try {
                 RedisLock redisLock = new RedisLock("sym_lock_123");
-                redisLock.lockAwait(200);
-                Thread.sleep(10000);
+                redisLock.lockAwait(2000);
+                System.out.println("重新唤醒...");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {
                 latch.countDown();
             }
         }).start();
+
+        latch.await();
+    }
+
+
+    /**
+     * 正常情况下测试
+     */
+    @Test
+    public void seven() throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(1);
+
+        for( int i=0; i<3; i++ ){
+            new Thread(()->{
+                RedisLock redisLock = new RedisLock("sym");
+                try {
+                    redisLock.lockAwait(50);
+                    System.out.println(Thread.currentThread().getName()+", 获得锁");
+                    Thread.sleep(2000);
+                    redisLock.unlock();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            },"线程"+(i+1)).start();
+        }
 
         latch.await();
     }

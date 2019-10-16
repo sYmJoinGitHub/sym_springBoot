@@ -19,7 +19,7 @@ public class RedisMessageResolver {
      * @param message 表示加锁的Key
      */
     public void handlerMessage(String message){
-        logger.info("从通道中监听到的消息={}",message);
+        logger.debug("从通道中监听到的消息={}",message);
         AbstractMapSynchronizer.unpark(message);
     }
 }

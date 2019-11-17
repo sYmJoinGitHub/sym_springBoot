@@ -1,3 +1,9 @@
+## 指定生效的profile
+spring:
+  profiles:
+    active: dev
+
+## 自定义的属性映射配置, 可以通过@ConfigurationProperties注解指定
 person:
   id: 110
   user-name: "人民警察"
@@ -13,8 +19,10 @@ person:
     addressId: 001
     country: '中国'
     isDel: true
+
 ---
-server:
-  port: 8080
+## 除了单独使用一个yml配置文件外, 同一个yml配置使用"---"也可以作为不同的profile
 spring:
-  profiles: dev
+  profiles: line
+server:
+  port: 16166

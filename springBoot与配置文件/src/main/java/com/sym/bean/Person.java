@@ -1,7 +1,6 @@
 package com.sym.bean;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -12,8 +11,7 @@ import java.util.Map;
 /**
  * Created by 沈燕明 on 2019/1/6.
  */
-@Setter
-@Getter
+@Data
 @ToString
 @ConfigurationProperties(prefix = "person")
 public class Person {

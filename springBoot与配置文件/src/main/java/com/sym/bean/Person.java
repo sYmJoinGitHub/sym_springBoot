@@ -13,6 +13,7 @@ import java.util.Map;
  */
 @Data
 @ToString
+// @ConfigurationProperties注解可以映射application.yml中的配置到实体类中，该注解有个prefix参数用于指定配置文件中的前缀
 @ConfigurationProperties(prefix = "person")
 public class Person {
     /* 整型数据绑定 */

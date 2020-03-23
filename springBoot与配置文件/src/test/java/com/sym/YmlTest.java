@@ -22,6 +22,9 @@ public class YmlTest {
     @Autowired
     private Address address;
 
+    @Autowired
+    private String objectI;
+
     /**
      * 测试 @ConfigurationProperties 和 @Value
      */
@@ -31,15 +34,12 @@ public class YmlTest {
         System.out.println(address);
     }
 
-    @Autowired
-    private String girl;
-
     /**
      * 测试 @Configuration 和 @Bean
      */
     @Test
     public void testTwo(){
-        System.out.println(girl);
+        System.out.println(objectI);
     }
 
     /**

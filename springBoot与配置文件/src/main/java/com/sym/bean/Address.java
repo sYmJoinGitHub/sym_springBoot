@@ -13,6 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class Address {
 
+    /*
+     * @Value注解可以映射配置文件获取单个值, 必须指定映射的配置名，用"${}"包裹,
+     * 也可以使用"#{}"包裹表示计算表达式
+     */
+
     @Value("${person.address.addressId:'addressId默认值'}")
     private String addressId;
 

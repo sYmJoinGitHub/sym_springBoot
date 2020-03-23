@@ -19,7 +19,7 @@ public class MyApplicationRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         // 方法会传入包装后的命令行参数ApplicationArguments
         List<String> optionArgs = args.getNonOptionArgs();
-        optionArgs.stream().forEach(System.out::println);
+        optionArgs.forEach(System.out::println);
         System.err.println("MyApplicationRunner的run()方法...");
     }
 }

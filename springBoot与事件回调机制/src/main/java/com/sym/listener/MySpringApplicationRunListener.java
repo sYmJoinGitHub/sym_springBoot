@@ -44,10 +44,10 @@ public class MySpringApplicationRunListener implements SpringApplicationRunListe
 
     }
 
-    @Override
-    public void finished(ConfigurableApplicationContext context, Throwable exception) {
-        // springBoot应用启动完成后会被回调
-        System.err.println("MySpringApplicationRunListener的finished()方法...");
-
-    }
+//    @Override
+//    public void finished(ConfigurableApplicationContext context, Throwable exception) {
+//        // springBoot应用启动完成后会被回调
+//        System.err.println("MySpringApplicationRunListener的finished()方法...");
+//
+//    }
 }

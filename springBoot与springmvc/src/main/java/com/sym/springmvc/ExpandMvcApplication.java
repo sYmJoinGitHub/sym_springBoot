@@ -9,9 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Created by 沈燕明 on 2018/10/15.
  */
 @SpringBootApplication
-public class ExpandSpringmvcApplication {
-
+public class ExpandMvcApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ExpandSpringmvcApplication.class);
+        SpringApplication.run(ExpandMvcApplication.class);
     }
 }

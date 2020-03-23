@@ -18,8 +18,6 @@ public class ThymeleafController {
 
     /**
      * springBoot对thymeleaf的自动配置，页面跳转：前缀为"classpath:/templates"，后缀为".html"
-     * @return
-     * @throws Exception
      */
     @RequestMapping("hello")
     public String forWardPage(Model model) throws Exception{

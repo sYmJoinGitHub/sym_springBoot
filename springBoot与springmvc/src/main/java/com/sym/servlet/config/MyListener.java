@@ -1,4 +1,4 @@
-package com.sym.servlet.config.listener;
+package com.sym.servlet.config;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 

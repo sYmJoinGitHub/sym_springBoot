@@ -1,4 +1,0 @@
-该package下的内容是：
-    1.springBoot扩展springMvc的知识点
-    2.配置全局异常处理器
-    3.配置拦截器

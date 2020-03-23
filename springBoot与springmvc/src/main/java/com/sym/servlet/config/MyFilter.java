@@ -1,4 +1,4 @@
-package com.sym.servlet.config.filter;
+package com.sym.servlet.config;
 import javax.servlet.*;
 import java.io.IOException;
 

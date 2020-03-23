@@ -1,4 +1,4 @@
-package com.sym.springmvc.globalException;
+package com.sym.springmvc.exception;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,12 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 public class ExceptionController {
 
     /**
-     * @ExceptionHandler 注解指定要捕获的异常
+     * {@link ExceptionHandler}注解指定要捕获的异常
      * 在方法内部实现对异常的处理逻辑
-     *
-     * @param request
-     * @param e
-     * @return
      */
     @ExceptionHandler(Exception.class)
     public ModelAndView globalExceptionHandler(HttpServletRequest request,Exception e){

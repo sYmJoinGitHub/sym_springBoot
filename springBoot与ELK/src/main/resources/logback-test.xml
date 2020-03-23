@@ -2,6 +2,7 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml" />
 
+    <!-- 需要在配置文件中指明 logStash的监听地址, 把日志传给它 -->
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>127.0.0.1:4560</destination>
         <!-- 日志输出编码 -->

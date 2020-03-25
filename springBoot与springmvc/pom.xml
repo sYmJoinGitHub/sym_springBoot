@@ -23,7 +23,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
         <!--springBoot自带的thymeleaf模板引擎版本太低，通过maven的properties属性，来设置更高版本-->
-        <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
+        <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <thymeleaf-layout-dialect.version>2.3.0</thymeleaf-layout-dialect.version>
 	</properties>
 

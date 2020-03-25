@@ -1,6 +1,6 @@
-package com.sym.service;
+package com.sym.redis.service;
 
-import com.alibaba.dubbo.config.annotation.Reference;
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,18 +12,21 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
 
-    @Reference //@Reference注解可以远程连接服务提供方的接口，获取数据
+    /**
+     * {@link Reference}注解可以远程连接服务提供方的接口，获取数据
+     */
+    @Reference
     private OrderService orderService;
 
     @Override
     public void getOrder() {
         // 调用远程接口的方法
-        System.out.println(orderService.gerOrder());
+        System.out.println(orderService.getOrder());
     }
 
     @Override
-    public void sendToOrder(String msg) {
+    public void setOrder(String msg) {
         // 调用远程接口的方法
-        orderService.getMsg(msg);
+        orderService.setOrder(msg);
     }
 }

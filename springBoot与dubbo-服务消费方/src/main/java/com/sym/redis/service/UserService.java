@@ -1,4 +1,4 @@
-package com.sym.service;
+package com.sym.redis.service;
 
 /**
  * springBoot与dubbo集成，服务消费方的接口
@@ -9,6 +9,6 @@ public interface UserService {
 
     void getOrder();
 
-    void sendToOrder(String msg);
+    void setOrder(String msg);
 
 }

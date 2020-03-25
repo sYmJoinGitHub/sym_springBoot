@@ -3,6 +3,6 @@ dubbo:
   scan:
     base-packages: com.sym.redis.service #配置哪一个包下面的接口要发布出去
   registry:
-    address: zookeeper://192.168.64.129:2181 #配置zookeeper的注册地址
+    address: zookeeper://127.0.0.1:2181 #配置zookeeper的注册地址
   application:
     name: service-producer #应用名称

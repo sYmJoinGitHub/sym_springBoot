@@ -50,17 +50,24 @@
 
 		<!-- springBoot整合dubbo -->
 		<dependency>
-			<groupId>com.alibaba.boot</groupId>
+			<groupId>org.apache.dubbo</groupId>
 			<artifactId>dubbo-spring-boot-starter</artifactId>
-			<version>0.1.0</version>
+			<version>2.7.5</version>
 		</dependency>
 
-		<!--dubbo需要zookeeper的支持，引入zookeeper的客户端-->
+		<!--dubbo后面的zookeeper操作依赖于这两个jar, 前面版本可以使用zkClient-->
+		<!--但是zookeeper版本会与这两个jar有冲突, 我zk版本是3.4.13, 所以选用下面两个版本, 具体版本对应可以谷歌-->
 		<dependency>
-			<groupId>com.github.sgroschupf</groupId>
-			<artifactId>zkclient</artifactId>
-			<version>0.1</version>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-framework</artifactId>
+			<version>2.12.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-recipes</artifactId>
+			<version>2.12.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -1,6 +1,6 @@
 package com.sym;
 
-import com.sym.service.UserService;
+import com.sym.redis.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,6 @@ public class DubboTest {
 
     @Test
     public void testTwo(){
-        userService.sendToOrder("您好订单已经处理成功");
+        userService.setOrder("您好订单已经处理成功");
     }
 }

@@ -12,7 +12,6 @@ public class MyBeanHealthIndicator implements HealthIndicator {
     /**
      * health()方法执行判断逻辑，例子：如果是连接池的健康信息，就在这里
      * 判断连接是否生效，池中是否有指定配置的连接数...等等
-     * @return
      */
     @Override
     public Health health() {

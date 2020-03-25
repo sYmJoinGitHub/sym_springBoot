@@ -58,8 +58,6 @@ public class ExpandController {
 
     /**
      * 模拟出现400错误
-     *
-     * @return
      */
     @RequestMapping("exception2")
     @ResponseBody

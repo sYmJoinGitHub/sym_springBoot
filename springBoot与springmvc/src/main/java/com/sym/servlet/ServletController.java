@@ -14,7 +14,6 @@ public class ServletController {
     /**
      * 测试自定义的Servlet
      * 如果自定义的Servlet和Controller里面的url映射地址一样，只会执行Servlet
-     * @return
      */
     @RequestMapping("/servlet")
     public String servletRequest(){
@@ -23,7 +22,6 @@ public class ServletController {
 
     /**
      * 测试自定义的Filter
-     * @return
      */
     @RequestMapping("/filter")
     public String filterRequest(){

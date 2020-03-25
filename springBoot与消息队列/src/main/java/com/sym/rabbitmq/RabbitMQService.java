@@ -1,5 +1,6 @@
 package com.sym.rabbitmq;
-import com.sym.rabbitmq.bean.ProductBean;
+
+import com.sym.domain.ProductEntity;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.annotation.RabbitListeners;
@@ -26,11 +27,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class RabbitMQService {
 
-    // springBoot自动配置的，用于简化操作rabbitMQ的模板类
+    /**
+     * springBoot自动配置的，用于简化操作rabbitMQ的模板类
+     */
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    // springBoot自动配置的，用于创建or删除：交换器exchange、队列queue、绑定关系bind
+    /**
+     * springBoot自动配置的，用于创建or删除：交换器exchange、队列queue、绑定关系bind
+     */
     @Autowired
     private AmqpAdmin amqpAdmin;
 
@@ -50,7 +55,6 @@ public class RabbitMQService {
 
     /**
      * 发送消息到 product_fanout 转换器上，因为fanout类型的转换器是群发的，所以不需要指定路由键
-     * @param object
      */
     public void sendToProduct_fanout(Object object){
         rabbitTemplate.convertAndSend("product_fanout","",object);
@@ -59,8 +63,6 @@ public class RabbitMQService {
 
     /**
      * 发送消息到 product_topic 转换器上，它是根据通配符匹配，来确定分发哪些队列上
-     * @param routingKey
-     * @param object
      */
     public void sendToProduct_topic(String routingKey, Object object){
         rabbitTemplate.convertAndSend("product_topic",routingKey,object);
@@ -70,7 +72,6 @@ public class RabbitMQService {
     /**
      * 从队列中获取数据
      * @param queueName 从这个队列中获取
-     * @return
      */
     public Object receiveFromQueue(String queueName){
         Object o = rabbitTemplate.receiveAndConvert(queueName);
@@ -82,18 +83,15 @@ public class RabbitMQService {
     /**
      * 监听队列，每当队列中有消息放进去时，就会自动调用这个方法，将消息内的信息，放到方法参数上去
      * 因为此方法参数指定为 ProductBean ，所以springBoot会将消息转换成 ProductBean。
-     *
-     * @param product
      */
     @RabbitListener(queues = "queue_four")
-    public void productListener(ProductBean product){
+    public void productListener(ProductEntity product){
         System.out.println("收到消息啦，product="+product);
     }
 
 
     /**
-     * @RabbitListeners 注解可以设置多个 @RabbitListener，用来监听多个队列
-     * @param message
+     * {@link RabbitListeners} 注解可以设置多个 @RabbitListener，用来监听多个队列
      */
     @RabbitListeners(value = {
             @RabbitListener(queues = "queue_two"),

@@ -15,9 +15,12 @@ import org.springframework.context.annotation.Configuration;
  *
  * Created by 沈燕明 on 2019/5/30 16:37.
  */
-@Configuration //标注它是一个配置类
-@ConditionalOnWebApplication // 只有在web环境上，此配置类才会生效
-@ConditionalOnProperty(prefix = "spring.sym",name = "component.enable",havingValue = "true") // 只有配置文件配置了spring.sym.component.enable=true才生效
+//标注它是一个配置类
+@Configuration
+// 只有在web环境上，此配置类才会生效
+@ConditionalOnWebApplication
+// 只有配置文件配置了spring.sym.component.enable=true才生效
+@ConditionalOnProperty(prefix = "spring.sym",name = "component.enable",havingValue = "true")
 // ...还可以有其它的判断条件
 public class SymAutoConfiguration {
 

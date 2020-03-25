@@ -1,4 +1,4 @@
-package com.sym.verify;
+package com.sym;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class CheckComponent {
+public class CheckComponentTest {
 
     @Autowired
     private ApplicationContext context;

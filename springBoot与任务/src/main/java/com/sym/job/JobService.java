@@ -1,4 +1,4 @@
-package com.sym.time;
+package com.sym.job;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * Created by 沈燕明 on 2018/11/28.
  */
 @Service
-public class TimeService {
+public class JobService {
 
     @Scheduled(cron = "* * * * * *")
     public void one() {

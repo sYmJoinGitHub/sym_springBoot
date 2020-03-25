@@ -1,5 +1,6 @@
-package com.sym.async;
+package com.sym;
 
+import com.sym.mail.MailService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,22 +8,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Created by 沈燕明 on 2018/11/28.
+ * Created by 沈燕明 on 2018/11/30.
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class AsyncTest {
+public class MailTest {
 
     @Autowired
-    private AsyncController asyncService;
+    private MailService mailService;
 
     @Test
     public void testOne(){
-        asyncService.commonRun();
+        mailService.sendSimpleMail();
     }
 
     @Test
-    public void testTwo(){
-        asyncService.sendMail();
+    public void testTwo() throws Exception{
+        mailService.sendHtmlMail();
     }
 }

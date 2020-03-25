@@ -1,4 +1,4 @@
-package com.sym.time;
+package com.sym.job;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,8 +11,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @SpringBootApplication
 @EnableScheduling // 开启定时任务的功能
-public class TimeApplication {
+public class JobApplication {
     public static void main(String[] args) {
-        SpringApplication.run(TimeApplication.class);
+        SpringApplication.run(JobApplication.class, args);
     }
 }

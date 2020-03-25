@@ -1,4 +1,0 @@
-如果工程引入了redis，则redis的配置类RedisCacheConfiguration、自动配置类RedisAutoConfiguration 就会生效
-缓存管理器就改为使用 RedisCacheManager
-
-所以，如果想使用redis作为缓存，需要将pom.xml文件中的redis模块引入

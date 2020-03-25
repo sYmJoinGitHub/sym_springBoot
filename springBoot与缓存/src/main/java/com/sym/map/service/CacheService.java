@@ -1,6 +1,6 @@
-package com.sym.concurrenMap;
+package com.sym.map.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sym.map.domain.CacheBean;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
@@ -8,18 +8,23 @@ import org.springframework.stereotype.Service;
 /**
  * Created by 沈燕明 on 2018/11/15.
  */
+@SuppressWarnings("SpringCacheableComponentsInspection")
 @Service
 @CacheConfig() // @CacheConfig是作全局配置使用，它作用在类上，可以指定一些公用的配置，例如：缓存管理器，key生成策略等
 public class CacheService {
 
-    @Autowired
-    private CacheMapper cacheMapper;
+    private final CacheMapper cacheMapper;
+
+    public CacheService(CacheMapper cacheMapper) {
+        this.cacheMapper = cacheMapper;
+    }
 
     /**
-     * @Cacheable 可以缓存方法的返回值，方法调用之前也查看缓存中是否有记录，
+     * {@link Cacheable}可以缓存方法的返回值，方法调用之前也查看缓存中是否有记录，
      * 如果已经有缓存，则不会调用方法，直接返回缓存；若没有记录，才会执行方法，并将方法返回值保存到缓存中
      */
-    @Cacheable(cacheNames = {"springBoot"}, keyGenerator = "mykeyGenerator", condition = "#p0>1", unless = "#result.id>10")
+    @Cacheable(cacheNames = {"springBoot"}, keyGenerator = "symKeyGenerator",
+            condition = "#p0>1", unless = "#result.id>10")
     public CacheBean selectOne(Integer id) {
         System.out.println("查询信息：id=" + id);
         return cacheMapper.selectOne(id);
@@ -27,8 +32,8 @@ public class CacheService {
 
 
     /**
-     * @CachePut 也是缓存方法的返回值，但是它相当于更新缓存。所以它的流程是直接执行方法，然后重新赋值缓存。
-     * 它的key生成策略要和 @Cacheable一样，否则缓存永远更新不起来，因为它们key不一样，都是各干各的
+     * {@link CachePut}也是缓存方法的返回值，但是它相当于更新缓存。所以它的流程是直接执行方法，然后重新赋值缓存。
+     * 它的key生成策略要和{@link Cacheable}一样，否则缓存永远更新不起来，因为它们key不一样，都是各干各的
      */
     @CachePut(cacheNames = "springBoot", key = "#result.id", unless = "#result==null")
     public CacheBean update(CacheBean bean) {
@@ -38,7 +43,7 @@ public class CacheService {
     }
 
     /**
-     * @CacheEvict 清空缓存，它可以删除指定key的缓存，也可以将指定Cache组件内的所有缓存都清空。
+     * {@link CacheEvict}清空缓存，它可以删除指定key的缓存，也可以将指定Cache组件内的所有缓存都清空。
      * beforeInvocation 指定在方法调用之前还是之后清空缓存，多出这项的原因之一：是怕当方法出现异常之后，缓存没有清空...
      */
     @CacheEvict(value = {"springBoot"}, condition = "#result==true")
@@ -50,8 +55,8 @@ public class CacheService {
 
 
     /**
-     * @Caching 注解是一个组合注解，它包含了 @Cacheable、@CachePut和@CacheEvict三个注解
-     * 用来组合复杂的缓存逻辑。
+     * {@link Caching}注解是一个组合注解，它包含{@link Cacheable}、@{@link CachePut}和
+     * {@link CacheEvict} 三个注解用来组合复杂的缓存逻辑。
      */
     @Caching(
             cacheable = {@Cacheable(value = "springBoot", key = "#name")},

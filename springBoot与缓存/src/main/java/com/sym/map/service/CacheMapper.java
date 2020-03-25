@@ -1,4 +1,5 @@
-package com.sym.concurrenMap;
+package com.sym.map.service;
+import com.sym.map.domain.CacheBean;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -12,20 +13,18 @@ import java.util.Map;
 @Component
 public class CacheMapper {
 
-    private static Map<Integer,CacheBean> dataMap;
+    private static Map<Integer, CacheBean> dataMap;
 
     static{
         dataMap = new HashMap<>();
-        dataMap.put(110,new CacheBean(110,"张三"));
-        dataMap.put(119,new CacheBean(119,"李四"));
-        dataMap.put(120,new CacheBean(120,"王五"));
-        dataMap.put(114,new CacheBean(114,"赵六"));
+        dataMap.put(110,new CacheBean(1,"张三"));
+        dataMap.put(119,new CacheBean(2,"李四"));
+        dataMap.put(120,new CacheBean(3,"王五"));
+        dataMap.put(114,new CacheBean(4,"赵六"));
     }
 
     /**
      * 查询
-     * @param id
-     * @return
      */
     public CacheBean selectOne(Integer id){
         return dataMap.get(id);
@@ -33,8 +32,6 @@ public class CacheMapper {
 
     /**
      * 更新
-     * @param bean
-     * @return
      */
     public void update(CacheBean bean){
         dataMap.put(bean.getId(),bean);
@@ -42,8 +39,6 @@ public class CacheMapper {
 
     /**
      * 删除
-     * @param id
-     * @return
      */
     public void  delete(Integer id){
         dataMap.remove(id);

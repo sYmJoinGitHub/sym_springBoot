@@ -1,4 +1,4 @@
-package com.sym.concurrenMap;
+package com.sym.map.config;
 
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
@@ -15,9 +15,8 @@ public class CacheConfig {
 
     /**
      * 使用匿名实现类的方式自定义 keyGenerator 即缓存key的生成策略，将其注册到IOC容器中
-     * @return
      */
-    @Bean(name = "mykeyGenerator")
+    @Bean(name = "symKeyGenerator")
     public KeyGenerator keyGenerator(){
         return new KeyGenerator() {
             /**

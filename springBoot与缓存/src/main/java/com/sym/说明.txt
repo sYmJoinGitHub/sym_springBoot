@@ -1,3 +1,0 @@
-该模块介绍的是springBoot中使用缓存：
-1、默认使用ConcurrentHashMap作为缓存载体
-2、整合Redis

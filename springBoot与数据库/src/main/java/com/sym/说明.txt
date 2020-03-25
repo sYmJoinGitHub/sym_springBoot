@@ -1,4 +1,0 @@
-该package下的内容讲的是：
-    1.springBoot配置数据源(在datasource包下)
-    2.整合Mybatis
-    3.整合springDataJpa

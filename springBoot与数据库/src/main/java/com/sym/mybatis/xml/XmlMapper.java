@@ -1,4 +1,5 @@
-package com.sym.mybatis.un_anon;
+package com.sym.mybatis.xml;
+import com.sym.mybatis.domain.SimpleEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -8,9 +9,9 @@ import org.apache.ibatis.annotations.Mapper;
  * Created by 沈燕明 on 2018/11/11.
  */
 @Mapper
-public interface MybatisUnAnonMapper {
+public interface XmlMapper {
 
-    int add(MybatisUnAnonBean bean);
+    int add(SimpleEntity entity);
 
-    MybatisUnAnonBean select(String id);
+    SimpleEntity select(int id);
 }

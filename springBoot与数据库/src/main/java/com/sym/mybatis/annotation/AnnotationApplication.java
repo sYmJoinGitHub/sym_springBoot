@@ -1,4 +1,4 @@
-package com.sym.mybatis.anon;
+package com.sym.mybatis.annotation;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -10,9 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Created by 沈燕明 on 2018/11/10.
  */
 @SpringBootApplication
-@MapperScan(value = "com.sym.mybatis.anon")
-public class MybatisAnonApplication {
+@MapperScan(value = "com.sym.mybatis.anon") // MapperScan避免了每个接口都要写@Mapper注解的尴尬
+public class AnnotationApplication {
     public static void main(String[] args) {
-        SpringApplication.run( MybatisAnonApplication.class );
+        SpringApplication.run(AnnotationApplication.class, args);
     }
 }

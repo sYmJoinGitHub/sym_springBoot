@@ -1,4 +1,4 @@
-package com.sym.springDataJpa;
+package com.sym.jpa;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * Created by 沈燕明 on 2018/11/11.
  */
-public interface SpringDataJPARepository extends JpaRepository<UserBean,Integer> {
+public interface JpaEntityRepository extends JpaRepository<JpaEntity,Integer> {
 }

@@ -13,25 +13,22 @@ public class MyRealm extends AuthorizingRealm{
 
     /**
      * 认证逻辑
-     * @param authenticationToken
-     * @return
-     * @throws AuthenticationException
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
+            throws AuthenticationException {
+        // 获取用户提交的个人身份信息, 然后去找它的认证信息
         UsernamePasswordToken token = (UsernamePasswordToken)authenticationToken;
-        /* 模拟数据 */
+        // 模拟数据
         String username = "张三";
         String password = "123456";
-        /* 将需要校验的用户名和密码返回给shiro，它会自己拿authenticationToken里面的用户名和密码去验证 */
+        // 将需要校验的用户名和密码返回给shiro，它会自己拿authenticationToken里面的用户名和密码去验证
         return new SimpleAuthenticationInfo(username,password,super.getName());
     }
 
 
     /**
      * 授权逻辑
-     * @param principals
-     * @return
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {

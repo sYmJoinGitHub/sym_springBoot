@@ -15,16 +15,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("shiro")
 public class ShiroController {
 
-
-
-
-    // 跳转登录页使用
+    /**
+     * 跳转登录页使用
+     */
     @RequestMapping(value = "login",method = RequestMethod.GET)
     public String login(){
         return "login";
     }
 
-    // 用户登录使用
+    /**
+     * 用户登录使用
+     */
     @RequestMapping(value = "login",method = RequestMethod.POST)
     public String login(String name,String pwd){
         UsernamePasswordToken token = new UsernamePasswordToken(name,pwd);
@@ -34,6 +35,9 @@ public class ShiroController {
     }
 
 
+    /**
+     * 登出
+     */
     @RequestMapping("logout")
     public String logout(){
         Subject subject = SecurityUtils.getSubject();
@@ -42,6 +46,9 @@ public class ShiroController {
     }
 
 
+    /**
+     * 认证访问
+     */
     @RequestMapping("main")
     public String main(){
         return "main";

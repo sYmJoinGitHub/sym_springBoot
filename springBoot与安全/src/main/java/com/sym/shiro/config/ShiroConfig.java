@@ -18,7 +18,9 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
-    /* 1、需要创建shiro的核心,securityManager */
+    /**
+     * 1、需要创建shiro的核心,securityManager
+     */
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
@@ -26,8 +28,9 @@ public class ShiroConfig {
         return securityManager;
     }
 
-
-    /* 2、创建shiro的过滤器 */
+    /**
+     * 2、创建shiro的过滤器
+     */
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean() {
         ShiroFilterFactoryBean factory = new ShiroFilterFactoryBean();

@@ -1,4 +1,0 @@
-这是springBoot与安全认证框架集成的package
-
-1.springBoot与springSecurity
-2.springBoot与shiro

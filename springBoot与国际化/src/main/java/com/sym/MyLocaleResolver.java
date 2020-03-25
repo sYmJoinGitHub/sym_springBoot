@@ -9,6 +9,7 @@ import java.util.Locale;
 
 /**
  * 自定义 LocaleResolver ，以获取区域对象信息
+ *
  * Created by 沈燕明 on 2018/10/20.
  */
 public class MyLocaleResolver implements LocaleResolver {

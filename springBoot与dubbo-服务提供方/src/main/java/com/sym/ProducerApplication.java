@@ -5,15 +5,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * springBoot与dubbo集成的启动类
- * 作为服务提供方
- * <p>
- * Created by 沈燕明 on 2018/12/2.
+ * springBoot与dubbo集成的启动类, 作为服务提供方
+ *
+ * @author shenym
+ * @date 2020/3/15 23:10
  */
 @SpringBootApplication
-@EnableDubbo // 让springBoot开启dubbo的功能
-public class Application {
+@EnableDubbo //启动dubbo的自动化配置
+public class ProducerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Application.class);
+        SpringApplication.run(ProducerApplication.class, args);
     }
 }

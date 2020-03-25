@@ -1,5 +1,12 @@
-## jest的配置
 spring:
-  elasticsearch:
-      jest:
-        uris: http://127.0.0.1:9200
+  elasticsearch: ## spring data 对elasticsearch的配置
+    rest:
+      uris: http://127.0.0.1:9200
+      connection-timeout: 10
+      username:
+      password:
+    jest: ## jest 对elasticsearch的配置
+      connection-timeout: 10
+      uris: http://127.0.0.1:9200
+      username:
+      password:

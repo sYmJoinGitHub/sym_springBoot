@@ -1,6 +1,0 @@
-springBoot与ES的集成：
-1.可以使用springData elasticsearch
-2.可以使用jest
-3.推荐使用Bboss吧
-
-这里只是测试jest，bboss在另外一个工程中

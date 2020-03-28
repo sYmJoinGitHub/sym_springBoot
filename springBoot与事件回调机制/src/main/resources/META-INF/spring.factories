@@ -1,6 +1,6 @@
-# ApplicationContextInitializer
+# 自定义的ApplicationContextInitializer
 org.springframework.context.ApplicationContextInitializer=\
-com.sym.listener.MyApplicationContextInitializer
+com.sym.initializer.SymApplicationContextInitializer0
 
 # SpringApplicationRunListener
 org.springframework.boot.SpringApplicationRunListener=\

@@ -1,3 +1,9 @@
 context:
+  ## 被 DelegatingApplicationContextInitializer 加载, 好比装饰器包装了
   initializer:
     classes: com.sym.initializer.SymApplicationContextInitializer2
+  ## 被 DelegatingApplicationListener 加载, 原理同上
+  listener:
+    classes: com.sym.listener.SymApplicationListener2
+
+

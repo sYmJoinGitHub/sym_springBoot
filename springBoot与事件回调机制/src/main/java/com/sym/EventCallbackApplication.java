@@ -4,6 +4,9 @@ import com.sym.initializer.SymApplicationContextInitializer1;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * 启动 springBoot 就可以看到整个事件回调机制
+ */
 @SpringBootApplication
 public class EventCallbackApplication {
     public static void main(String[] args) {

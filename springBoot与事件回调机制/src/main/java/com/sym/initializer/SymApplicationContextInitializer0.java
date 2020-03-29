@@ -2,6 +2,7 @@ package com.sym.initializer;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
 
@@ -16,7 +17,7 @@ import java.util.Map;
  * @author shenym
  * @date 2020/3/28 15:09
  */
-
+@Order(10) // @Order可以指定此初始化器的加载顺序, 越小越快加载
 public class SymApplicationContextInitializer0 implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     /**
@@ -34,6 +35,6 @@ public class SymApplicationContextInitializer0 implements ApplicationContextInit
         // 添加到当前环境中
         propertySources.addLast(mapPropertySource);
 
-        System.out.println("ApplicationContextInitializer0");
+        System.err.println("ApplicationContextInitializer0.initialize()");
     }
 }

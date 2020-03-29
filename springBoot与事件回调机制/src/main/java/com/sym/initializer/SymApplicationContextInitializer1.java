@@ -28,6 +28,6 @@ public class SymApplicationContextInitializer1 implements ApplicationContextInit
         ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
         beanFactory.getBeanNamesIterator();
 
-        System.out.println("ApplicationContextInitializer1");
+        System.err.println("ApplicationContextInitializer1.initialize()");
     }
 }

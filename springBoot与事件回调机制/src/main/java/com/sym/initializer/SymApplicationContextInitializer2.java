@@ -21,6 +21,6 @@ public class SymApplicationContextInitializer2 implements ApplicationContextInit
      */
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
-        System.out.println("ApplicationContextInitializer2");
+        System.err.println("ApplicationContextInitializer2.initialize()");
     }
 }

@@ -6,7 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * 启动 springBoot 就可以看到整个事件回调机制
+ * 启动 springBoot 就可以看到整个事件回调机制.
+ * 可以在启动参数加入 --arg=no.1
  */
 @SpringBootApplication
 public class EventCallbackApplication {

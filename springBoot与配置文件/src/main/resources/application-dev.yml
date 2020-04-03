@@ -2,3 +2,5 @@
 ## 而配置文件取名要符合：application-{}.xml, 就只需要指定{}设置的值即可
 server:
   port: 13145
+sym:
+  key: prop_3

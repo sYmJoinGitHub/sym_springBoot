@@ -16,9 +16,6 @@ import javax.persistence.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-/*
- * 加上表的映射配置
- */
 @Entity
 @Table( name = "t_springboot")
 public class JpaEntity {

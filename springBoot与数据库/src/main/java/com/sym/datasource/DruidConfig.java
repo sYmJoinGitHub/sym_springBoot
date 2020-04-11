@@ -1,4 +1,4 @@
-package com.sym.datasource.druid;
+package com.sym.datasource;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
@@ -18,7 +18,8 @@ import java.util.Map;
  * 如果我们自己要整合第三方的数据源，则需要额外的配置，需要我们自己创建一个数据源配置，将配置好
  * 的数据源注入到IOC容器中
  *
- * Created by 沈燕明 on 2018/11/9.
+ * @author ym.shen
+ * @date 2018/11/9
  */
 @Configuration
 public class DruidConfig {
@@ -28,11 +29,7 @@ public class DruidConfig {
      */
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource druidSource(){
-        // 需要配置 DruidDataSource ，也可以初始化后自己设置，但是
-        // 这种配置太麻烦了，可以直接将配置写在application.yml中。
-        // 用springBoot的 @ConfigurationProperties 注解来绑定
-        // dataSource.setKeepAlive();
+    public DataSource druidSource() {
         return new DruidDataSource();
     }
 
@@ -40,17 +37,17 @@ public class DruidConfig {
      * 配置Druid的监控---配置自带的Servlet
      */
     @Bean(name = "StatViewServlet")
-    public ServletRegistrationBean<StatViewServlet> druidServlet(){
+    public ServletRegistrationBean<StatViewServlet> druidServlet() {
         ServletRegistrationBean<StatViewServlet> bean = new ServletRegistrationBean<>(
                 new StatViewServlet(), "/druid/*");
         // 对自定义servlet的配置可以通过 setInitParameters()方法设置，
-        Map<String,String> servletConfigMap = new HashMap<>();
+        Map<String, String> servletConfigMap = new HashMap<>();
         // 允许访问的主机地址
-        servletConfigMap.put("allow","127.0.0.1");
+        servletConfigMap.put("allow", "127.0.0.1");
         // 登录用户名
-        servletConfigMap.put("loginUsername","admin");
+        servletConfigMap.put("loginUsername", "admin");
         // 登录密码
-        servletConfigMap.put("loginPassword","admin");
+        servletConfigMap.put("loginPassword", "admin");
         bean.setInitParameters(servletConfigMap);
         return bean;
     }
@@ -59,14 +56,16 @@ public class DruidConfig {
      * 配置Druid的监控---配置自带的Filter
      */
     @Bean(name = "WebStatFilter")
-    public FilterRegistrationBean<WebStatFilter> druidFilter(){
+    public FilterRegistrationBean<WebStatFilter> druidFilter() {
+        // Filter的拦截路径
         FilterRegistrationBean<WebStatFilter> bean = new FilterRegistrationBean<>(
-                new WebStatFilter());bean.addUrlPatterns("/*"); // Filter的拦截路径
+                new WebStatFilter());
+        bean.addUrlPatterns("/*");
         // 额外的配置
-        Map<String,String> filterConfigMap = new HashMap<>();
+        Map<String, String> filterConfigMap = new HashMap<>(4);
         // 不拦截以下url映射
-        filterConfigMap.put("exclusions","*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
-        bean.setInitParameters( filterConfigMap );
+        filterConfigMap.put("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
+        bean.setInitParameters(filterConfigMap);
         return bean;
     }
 

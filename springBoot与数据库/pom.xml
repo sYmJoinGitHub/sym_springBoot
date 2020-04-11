@@ -48,17 +48,10 @@
 
 		<!-- druid数据源 -->
 		<dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>1.1.10</version>
-        </dependency>
-
-		<!-- c3p0数据源 -->
-		<dependency>
-            <groupId>c3p0</groupId>
-            <artifactId>c3p0</artifactId>
-            <version>0.9.1.2</version>
-        </dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-starter</artifactId>
+			<version>1.1.22</version>
+		</dependency>
 
 		<!--springBoot原生JDBC启动器-->
 		<dependency>

@@ -1,5 +1,6 @@
 package com.sym;
 
+import com.sym.jpa.JpaApplication;
 import com.sym.jpa.JpaEntity;
 import com.sym.jpa.JpaEntityRepository;
 import com.sym.mybatis.domain.SimpleEntity;
@@ -16,7 +17,7 @@ import java.util.Optional;
  * @author shenym
  * @date 2020/3/25 10:23
  */
-@SpringBootTest
+@SpringBootTest(classes = {JpaApplication.class})
 @RunWith(SpringRunner.class)
 public class JpaTest {
 

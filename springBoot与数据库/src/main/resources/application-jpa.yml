@@ -1,0 +1,4 @@
+## springData JPA整合
+spring:
+  jpa:
+    show-sql: true

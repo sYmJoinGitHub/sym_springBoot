@@ -1,18 +1,23 @@
 package com.sym;
 
+import com.sym.mybatis.annotation.AnnotationApplication;
 import com.sym.mybatis.annotation.AnnotationMapper;
 import com.sym.mybatis.domain.SimpleEntity;
+import com.sym.mybatis.xml.XmlApplication;
 import com.sym.mybatis.xml.XmlMapper;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author shenym
  * @date 2020/3/25 10:04
  */
 @SuppressWarnings("ALL")
-@SpringBootTest
+@SpringBootTest(classes = {XmlApplication.class, AnnotationApplication.class})
+@RunWith(SpringRunner.class)
 public class MybatisTest {
 
     @Autowired
@@ -20,6 +25,12 @@ public class MybatisTest {
 
     @Autowired
     private XmlMapper xmlMapper;
+
+    @Test
+    public void test(){
+        System.out.println(annotationMapper);
+        System.out.println(xmlMapper);
+    }
 
     @Test
     public void addTest() {

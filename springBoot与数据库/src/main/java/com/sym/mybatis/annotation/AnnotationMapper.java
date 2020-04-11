@@ -9,7 +9,9 @@ import org.apache.ibatis.annotations.*;
  * 启动类或者mybatis配置类上使用{@link org.mybatis.spring.annotation.MapperScan}，指定该目录下所有接口为Mapper接口，
  * 从而省去一个一个接口类写{@link org.apache.ibatis.annotations.Mapper}
  * <p>
- * Created by 沈燕明 on 2018/11/10.
+ *
+ * @author ym.shen
+ * @date 2018/11/10
  */
 public interface AnnotationMapper {
 

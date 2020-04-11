@@ -8,7 +8,9 @@ import org.springframework.context.annotation.Configuration;
 /**
  * springBoot与mybatis整合-注解版，对mybatis的额外配置
  * <p>
- * Created by 沈燕明 on 2018/11/10.
+ *
+ * @author ym.shen
+ * @date 2018/11/10
  */
 @Configuration
 public class AnnotationConfig {

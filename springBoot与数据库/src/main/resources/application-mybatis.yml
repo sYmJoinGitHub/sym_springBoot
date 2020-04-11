@@ -1,0 +1,6 @@
+#springBoot与mybatis整合-配置文件版，最重要的两步：指定mybatis的全局配置文件和各个mapper文件的路径
+mybatis:
+  config-location: classpath:/config/mybatis-config.xml #指定全局配置文件的位置
+  mapper-locations: classpath:/mapper/*.xml #指定映射mapper接口的mapper文件位置
+  configuration:
+    map-underscore-to-camel-case: true # 是否开启驼峰命名规则与数据库的字段对应

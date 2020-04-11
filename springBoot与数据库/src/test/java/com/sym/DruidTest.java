@@ -1,10 +1,12 @@
 package com.sym;
 
+import com.sym.datasource.DruidApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.sql.DataSource;
@@ -14,7 +16,8 @@ import java.util.Map;
 /**
  * Created by 沈燕明 on 2018/11/9.
  */
-@SpringBootTest
+@SpringBootTest(classes = {DruidApplication.class})
+@ActiveProfiles("druid")
 @RunWith(SpringRunner.class)
 public class DruidTest {
 
@@ -23,6 +26,11 @@ public class DruidTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Test
+    public void test(){
+        System.out.println(dataSource);
+    }
 
     @Test
     public void dataSourceTest(){

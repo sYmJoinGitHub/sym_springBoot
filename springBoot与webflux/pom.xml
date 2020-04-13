@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sym</groupId>
-	<artifactId>webflux</artifactId>
+	<artifactId>springboot-webflux</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>webflux</name>
 	<description>springBoot与WebFlux</description>

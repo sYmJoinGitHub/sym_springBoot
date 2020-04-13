@@ -11,7 +11,8 @@
 	<groupId>com.sym</groupId>
 	<artifactId>springboot-webflux</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>webflux</name>
+
+	<name>springBoot与webflux</name>
 	<description>springBoot与WebFlux</description>
 
 	<properties>

@@ -13,7 +13,7 @@
 	<groupId>com.sym</groupId>
 	<artifactId>springboot-elasticsearch</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>springboot与es</name>
+	<name>springboot与elasticsearch</name>
 	<description>springBoot与Elasticsearch</description>
 
 	<properties>

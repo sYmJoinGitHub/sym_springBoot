@@ -8,7 +8,8 @@
     <artifactId>springboot-elk</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <name>springBoot搭建ELK</name>
+    <name>springBoot与ELK</name>
+    <description>springboot搭建elk平台</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

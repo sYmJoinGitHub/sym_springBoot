@@ -13,8 +13,8 @@
 	<artifactId>springBoot-callback</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>springBoot-事件回调机制</name>
-	<description>springBoot-事件回调机制</description>
+	<name>springBoot与事件回调</name>
+	<description>springBoot事件回调机制</description>
 
 	<properties>
 		<java.version>1.8</java.version>

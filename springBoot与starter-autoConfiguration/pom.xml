@@ -11,11 +11,11 @@
     </parent>
 
     <groupId>com.sym</groupId>
-    <artifactId>sym-component</artifactId>
+    <artifactId>sym-springBoot-autocinfiguration</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>sym-starter-自动配置包</name>
+    <name>springBoot与启动器-autConfiguration</name>
     <description>这里才是实际封装组件，并且按环境决定要不要注册到IOC容器中</description>
 
     <dependencies>

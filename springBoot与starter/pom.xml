@@ -11,7 +11,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>sym-starter-启动器</name>
+    <name>springBoot与启动器-starter</name>
     <description>启动器starter并不负责处理任何事,它的作用就是引入自动配置包而已</description>
 
     <dependencies>

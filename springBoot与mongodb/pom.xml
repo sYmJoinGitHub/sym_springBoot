@@ -11,7 +11,8 @@
 	<groupId>com.sym</groupId>
 	<artifactId>springboot-mongodb</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mongodb</name>
+
+	<name>springBoot与mongodb</name>
 	<description>springBoot与MongoDB</description>
 
 	<properties>

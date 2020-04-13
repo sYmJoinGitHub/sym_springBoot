@@ -12,7 +12,7 @@
 	</parent>
 
 	<groupId>com.sym</groupId>
-	<artifactId>springboot-configuration</artifactId>
+	<artifactId>springboot-config</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>springBoot与配置文件</name>

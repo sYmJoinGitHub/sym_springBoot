@@ -8,8 +8,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>springBoot与dubbo-服务消费方</name>
-	<description>springBoot与dubbo集成，作为服务消费的一方</description>
+	<name>springBoot与dubbo提供者</name>
+	<description>springBoot与dubbo集成, 作为服务消费的一方</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

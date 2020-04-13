@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>springBoot与dubbo-服务提供方</name>
+	<name>springBoot与dubbo提供者</name>
 	<description>springBoot集成dubbo，其中作为服务提供的一方</description>
 
 	<parent>

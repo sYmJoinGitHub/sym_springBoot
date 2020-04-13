@@ -11,7 +11,7 @@
 	<groupId>com.sym</groupId>
 	<artifactId>springboot-neo4j</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>neo4j</name>
+	<name>springBoot与neo4j</name>
 	<description>springBoot与Neo4j</description>
 
 	<properties>

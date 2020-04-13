@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sym</groupId>
-	<artifactId>mongodb</artifactId>
+	<artifactId>springboot-mongodb</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>mongodb</name>
 	<description>springBoot与MongoDB</description>

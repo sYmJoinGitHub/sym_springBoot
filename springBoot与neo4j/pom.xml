@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sym</groupId>
-	<artifactId>neo4j</artifactId>
+	<artifactId>springboot-neo4j</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>neo4j</name>
 	<description>springBoot与Neo4j</description>

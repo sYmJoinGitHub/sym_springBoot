@@ -11,9 +11,9 @@
 	</parent>
 
 	<groupId>com.sym</groupId>
-	<artifactId>elasticsearch</artifactId>
+	<artifactId>springboot-elasticsearch</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>elasticsearch</name>
+	<name>springboot与es</name>
 	<description>springBoot与Elasticsearch</description>
 
 	<properties>

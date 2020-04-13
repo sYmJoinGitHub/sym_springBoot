@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.com</groupId>
-	<artifactId>database</artifactId>
+	<artifactId>springboot-database</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
@@ -26,7 +26,6 @@
 	</properties>
 
 	<dependencies>
-
 		<!-- springBoot的配置文件处理器(绑定配置文件会有提示) -->
 		<dependency>
             <groupId>org.springframework.boot</groupId>

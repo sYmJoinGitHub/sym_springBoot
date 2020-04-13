@@ -6,6 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 /**
  * jpa启动类
+ *
  * @author ym.shen
  * @date 2018/11/11
  */

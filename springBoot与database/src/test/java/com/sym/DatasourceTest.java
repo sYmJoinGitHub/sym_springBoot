@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ import java.util.Map;
 @SpringBootTest(classes = {DruidApplication.class})
 @ActiveProfiles("druid")
 @RunWith(SpringRunner.class)
-public class DruidTest {
+public class DatasourceTest {
 
     @Autowired
     private DataSource dataSource;
@@ -28,17 +29,14 @@ public class DruidTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    public void test(){
-        System.out.println(dataSource);
-    }
-
-    @Test
-    public void dataSourceTest(){
+    public void testConnection() throws SQLException {
         System.out.println(dataSource.getClass());
+        System.out.println(dataSource.getConnection());
     }
 
+
     @Test
-    public void jdbcTest(){
+    public void testExecute(){
         List<Map<String, Object>> list = jdbcTemplate.queryForList("select * from t_temp ");
         for (Map<String, Object> map : list){
             System.out.println(map.get("id")+"\t"+map.get("testname"));

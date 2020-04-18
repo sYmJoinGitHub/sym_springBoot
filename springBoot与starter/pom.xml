@@ -5,8 +5,8 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sym</groupId>
     <!--非明文规定，但是如果不是springBoot官方提供的starter，默认取名为： 自定义名+springBoot-starter -->
+    <groupId>com.sym</groupId>
     <artifactId>sym-springBoot-starter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -18,7 +18,7 @@
         <dependency>
             <!-- 引入我们自定义的自动配置包 -->
             <groupId>com.sym</groupId>
-            <artifactId>sym-component</artifactId>
+            <artifactId>sym-springBoot-autocinfiguration</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

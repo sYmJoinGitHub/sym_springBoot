@@ -5,9 +5,11 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by 沈燕明 on 2018/12/4.
+ * 健康指标
+ * @author shenyanming
+ * @date 2018/12/4
  */
-@Component // 需要注入到IOC容器中
+@Component
 public class MyBeanHealthIndicator implements HealthIndicator {
     /**
      * health()方法执行判断逻辑，例子：如果是连接池的健康信息，就在这里

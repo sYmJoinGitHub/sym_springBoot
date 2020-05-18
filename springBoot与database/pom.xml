@@ -4,7 +4,12 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.com</groupId>
+	<parent>
+		<groupId>com.sym</groupId>
+		<artifactId>springboot-core-api</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>springboot-database</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -12,33 +17,9 @@
 	<name>springBoot与数据库</name>
 	<description>springBoot使用数据源,整合mybatis和springData JPA访问关系型数据库</description>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.5.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-	</properties>
 
 	<dependencies>
-		<!-- springBoot的配置文件处理器(绑定配置文件会有提示) -->
-		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-		<!-- springBoot的单元测试模块 -->
-		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
-
 		<!-- springBoot的web模块 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -77,24 +58,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.38</version>
         </dependency>
-
-		<!-- lombok插件，可以省略setter和getter方法 -->
-		<dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.20</version>
-        </dependency>
-
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
 
 </project>

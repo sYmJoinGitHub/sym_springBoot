@@ -1,6 +1,7 @@
 package com.sym;
 
 import com.sym.domain.ProductEntity;
+import com.sym.rabbitmq.RabbitMQApplication;
 import com.sym.rabbitmq.RabbitMQService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 /**
  * Created by 沈燕明 on 2018/11/24.
  */
-@SpringBootTest
+@SpringBootTest(classes = RabbitMQApplication.class)
 @RunWith(SpringRunner.class)
 public class RabbitMQTest {
 

@@ -1,0 +1,34 @@
+## springBoot整合kafka的配置
+spring:
+  kafka:
+    bootstrap-servers: http://kafkahost:9092 #指定kafka 代理地址，可以多个
+    #kafka-consumer配置
+    consumer:
+      group-id: myGroup
+      enable-auto-commit: false
+      auto-commit-interval: 100ms
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        session.timeout.ms: 15000
+    #kafka-producer配置
+    producer:
+      batch-size: 1000
+      retries: 0
+      buffer-memory: 33554432
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        linger.ms: 1
+    template:
+      default-topic: demo #指定默认topic id
+    listener:
+      concurrency: 5 #指定listener 容器中的线程数，用于提高并发量
+
+## 自定义的kafka配置
+kafka:
+  topic:
+    group-id: topicGroupId
+    topic-name:
+      - demo
+

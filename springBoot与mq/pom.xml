@@ -18,18 +18,30 @@
 
 
 	<dependencies>
-		<!--springBoot整合rabbitMQ-->
+
+		<!--rabbitMQ-->
 		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
-
-		<!-- 在使用rabbitMQ发送实体类信息，需要将其转换成JSON时，创建JSON消息转换器需要引入此jar -->
+		<!-- 在使用rabbitMQ发送实体类信息, 需要将其转换成JSON时, 创建JSON消息转换器需要引入此jar -->
 		<dependency>
           <groupId>org.codehaus.jackson</groupId>
           <artifactId>jackson-mapper-asl</artifactId>
           <version>1.9.13</version>
         </dependency>
+
+		<!-- kafka -->
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
 	</dependencies>
 
 </project>

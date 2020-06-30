@@ -1,25 +1,3 @@
-/*
- Navicat Premium Data Transfer
-
- Source Server         : localhost
- Source Server Type    : MySQL
- Source Server Version : 50729
- Source Host           : localhost:3306
- Source Schema         : springboot
-
- Target Server Type    : MySQL
- Target Server Version : 50729
- File Encoding         : 65001
-
- Date: 13/04/2020 13:37:18
-*/
-
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for t_jpa
--- ----------------------------
 DROP TABLE IF EXISTS `t_jpa`;
 CREATE TABLE `t_jpa` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -28,7 +6,20 @@ CREATE TABLE `t_jpa` (
   `sale` decimal(16,8) DEFAULT NULL,
   `is_deleted` tinyint(4) DEFAULT '0',
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `idx_name`(`name`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-SET FOREIGN_KEY_CHECKS = 1;
+
+DROP TABLE IF EXISTS `t_other`;
+CREATE TABLE `t_other` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `jpa_id` bigint(20) DEFAULT NULL,
+  `desc` varchar(64) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+BEGIN;
+INSERT INTO `t_other` VALUES (1, 4, 'test');
+INSERT INTO `t_other` VALUES (2, 4, 'aaa');
+COMMIT;
+

@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>springBoot与dubbo提供者</name>
+	<name>springBoot与dubbo-消费者</name>
 	<description>springBoot与dubbo集成, 作为服务消费的一方</description>
 
 

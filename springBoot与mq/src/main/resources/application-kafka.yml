@@ -18,6 +18,7 @@ spring:
       buffer-memory: 33554432
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      transaction-id-prefix: sym_tx_ #增加kafka事务的前缀
       properties:
         linger.ms: 1
     template:

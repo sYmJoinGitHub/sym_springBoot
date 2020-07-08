@@ -1,6 +1,7 @@
 package com.sym.jpa.domain;
 
 import lombok.Data;
+import lombok.experimental.FieldNameConstants;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "t_other")
+@FieldNameConstants
 public class OtherEntity {
 
     @Id

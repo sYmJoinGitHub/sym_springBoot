@@ -47,6 +47,9 @@ public class JpaEntity{
 
     private LocalDateTime createTime;
 
+    /**
+     * 关联查询, 一对多映射
+     */
     @OneToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinColumn(name = "jpa_id")
     private List<OtherEntity> other = new ArrayList<>();

@@ -3,3 +3,9 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/springboot?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: root
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: ture
+        show-sql: true

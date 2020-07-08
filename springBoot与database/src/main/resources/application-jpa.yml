@@ -1,5 +1,6 @@
 ## springData JPA整合
 spring:
+  ## 这个配置放在这里就不生效...
   jpa:
     properties:
       hibernate:

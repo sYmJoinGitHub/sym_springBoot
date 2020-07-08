@@ -2,6 +2,7 @@ package com.sym;
 
 import com.sym.jpa.JpaApplication;
 import com.sym.jpa.domain.JpaEntity;
+import com.sym.jpa.domain.OtherEntity;
 import com.sym.jpa.repository.JpaEntityRepository;
 import com.sym.jpa.repository.JpaEntitySpecificationExecutor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +15,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,9 +40,9 @@ public class JpaTest {
     @Autowired
     private JpaEntityRepository jpaEntityRepository1;
 
-
     @Autowired
     private JpaEntitySpecificationExecutor specificationExecutor;
+
 
     /**
      * 普通的插入操作
@@ -109,19 +112,23 @@ public class JpaTest {
     }
 
     /**
-     * 复杂查询
+     * 复杂查询, 通过{@link CriteriaQuery#from(Class)}可以关联表连接查询
      */
     @Test
     public void complexQuery() {
-        specificationExecutor.findOne((root, query, cb) -> {
+        Optional<JpaEntity> one = specificationExecutor.findOne((root, query, cb) -> {
             List<Predicate> predicates = Lists.newArrayList();
-            // 比如equal查询
-            predicates.add(cb.equal(root.get(JpaEntity.Fields.rate), 0.01));
-            // 比如大于等于查询
-            predicates.add(cb.greaterThanOrEqualTo(root.get(JpaEntity.Fields.id), 3));
-            // ...其它SQL语法查询, CriteriaBuilder都能做到
+            // join t_other, 关联t_other表, 关联条件是 t_jpa.id = t_other.jpa_id
+            Root<OtherEntity> joinRoot = query.from(OtherEntity.class);
+            predicates.add(cb.equal(root.get(JpaEntity.Fields.id), joinRoot.get(OtherEntity.Fields.jpaId)));
+
+            // other condition
+            predicates.add(cb.equal(joinRoot.get(OtherEntity.Fields.id), 1L));
+
             return query.where(predicates.toArray(new Predicate[0])).getRestriction();
         });
+        JpaEntity entity = one.orElse(null);
+        System.out.println(entity);
     }
 
     /**

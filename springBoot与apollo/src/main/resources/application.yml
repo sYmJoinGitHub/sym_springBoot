@@ -1,0 +1,13 @@
+## 设置apollo的项目id
+app:
+  id: common-service # 指定apollo
+apollo:
+  meta: http://127.0.0.1:13000
+  cluster: beijing
+  bootstrap:
+    enabled: true
+    namespaces: application,db.config
+
+
+server:
+  port: 9898

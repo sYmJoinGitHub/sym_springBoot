@@ -1,6 +1,6 @@
 ## springBoot集成dubbo，作为服务消费方的配置
 dubbo:
   application:
-    name: service-consumer # 表示此应用的名称
+    name: dubbo-consumer # 表示此应用的名称
   registry:
     address: zookeeper://127.0.0.1:2181 # 配置注册中心的地址，使用的是zookeeper

@@ -35,8 +35,19 @@
             <artifactId>sentinel-core</artifactId>
             <version>1.7.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-annotation-aspectj</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+        <!--热点参数限流-->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-parameter-flow-control</artifactId>
+            <version>1.7.2</version>
+        </dependency>
 
-        <!-- springBoot web -->
+        <!-- springBoot的Web模块 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -47,8 +58,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- 如果要更换Servlet容器，先排除掉 spring-boot-starter-web模块中的Tomcat模块，
-        再添加新的Servlet容器starter-->
+
+        <!-- 如果要更换Servlet容器，先排除掉 spring-boot-starter-web模块中的Tomcat模块，再添加新的Servlet容器starter-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-undertow</artifactId>

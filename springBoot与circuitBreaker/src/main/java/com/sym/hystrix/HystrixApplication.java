@@ -1,11 +1,9 @@
 package com.sym.hystrix;
 
-import com.netflix.hystrix.contrib.javanica.aop.aspectj.HystrixCommandAspect;
 import com.sym.hystrix.annotation.EnableHystrix;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
 /**
@@ -27,18 +25,9 @@ import org.springframework.context.annotation.Profile;
 @EnableHystrix
 @Profile("hystrix")
 @Slf4j
-public class HystrixApplication {
+public class HystrixApplication{
     public static void main(String[] args) {
         SpringApplication.run(HystrixApplication.class);
         log.info("服务启动成功");
     }
-
-    /**
-     *
-     */
-    @Bean
-    public HystrixCommandAspect hystrixCommandAspect() {
-        return new HystrixCommandAspect();
-    }
-
 }

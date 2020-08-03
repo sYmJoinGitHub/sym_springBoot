@@ -1,4 +1,4 @@
-package com.sym.servlet.config;
+package com.sym.config.component;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -18,7 +18,7 @@ import javax.servlet.ServletContextListener;
  * 本例子是监听ServletContext，即Servlet容器中创建和销毁，也是web应用的启动和停止
  * Created by 沈燕明 on 2018/10/31.
  */
-public class MyListener implements ServletContextListener {
+public class SimpleListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         System.out.println("web应用启动了！！");

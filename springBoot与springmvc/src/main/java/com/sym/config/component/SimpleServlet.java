@@ -1,4 +1,5 @@
-package com.sym.servlet.config;
+package com.sym.config.component;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +10,7 @@ import java.io.IOException;
  * 自定义Servlet，继承 HttpServlet 抽象类
  * Created by 沈燕明 on 2018/10/31.
  */
-public class MyServlet extends HttpServlet {
+public class SimpleServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -18,7 +19,7 @@ public class MyServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.doPost(req,resp);
+        this.doPost(req, resp);
     }
 
 

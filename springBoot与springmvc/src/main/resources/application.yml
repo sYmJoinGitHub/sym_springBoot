@@ -1,5 +1,4 @@
-## web服务器的配置
 server:
-  port: 8080 #修改端口
+  port: 8080
   servlet:
     context-path: /sym

@@ -1,4 +1,4 @@
-package com.sym.mybatis.annotation;
+package com.sym.mybatis.config;
 
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
@@ -6,14 +6,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * springBoot与mybatis整合-注解版，对mybatis的额外配置
- * <p>
+ * mybatis配置类
  *
- * @author ym.shen
- * @date 2018/11/10
+ * @author shenyanming
+ * @date 2020/8/4 22:15.
  */
 @Configuration
-public class AnnotationConfig {
+public class MybatisConfig {
 
     /**
      * 通过springBoot提供的ConfigurationCustomizer(定制器),
@@ -25,6 +24,9 @@ public class AnnotationConfig {
         return configuration -> {
             // 设置日志
             configuration.setLogImpl(Slf4jImpl.class);
+            // 驼峰映射
+            configuration.setMapUnderscoreToCamelCase(true);
         };
     }
+
 }

@@ -1,4 +1,4 @@
-package com.sym.mybatis.xml;
+package com.sym.mybatis.dao;
 import com.sym.mybatis.domain.SimpleEntity;
 import org.apache.ibatis.annotations.Mapper;
 

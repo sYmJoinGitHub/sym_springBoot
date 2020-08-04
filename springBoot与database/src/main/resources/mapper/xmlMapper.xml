@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sym.mybatis.dao.XmlMapper">
+
+    <insert id="add" keyProperty="id" parameterType="com.sym.mybatis.domain.SimpleEntity" useGeneratedKeys="true">
+        insert into t_springboot value (#{name})
+    </insert>
+
+    <select id="select" resultType="com.sym.mybatis.domain.SimpleEntity">
+        select * from t_springboot where id=#{id}
+    </select>
+
+</mapper>

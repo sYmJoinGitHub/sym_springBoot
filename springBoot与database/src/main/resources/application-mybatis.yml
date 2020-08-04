@@ -2,5 +2,5 @@
 mybatis:
   config-location: classpath:/config/mybatis-config.xml #指定全局配置文件的位置
   mapper-locations: classpath:/mapper/*.xml #指定映射mapper接口的mapper文件位置
-  configuration:
-    map-underscore-to-camel-case: true # 是否开启驼峰命名规则与数据库的字段对应
+  #configuration:
+    #map-underscore-to-camel-case: true

@@ -4,7 +4,7 @@ import com.sym.mybatis.annotation.AnnotationApplication;
 import com.sym.mybatis.annotation.AnnotationMapper;
 import com.sym.mybatis.domain.SimpleEntity;
 import com.sym.mybatis.xml.XmlApplication;
-import com.sym.mybatis.xml.XmlMapper;
+import com.sym.mybatis.dao.XmlMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

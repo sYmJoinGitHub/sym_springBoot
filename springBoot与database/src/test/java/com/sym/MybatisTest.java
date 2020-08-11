@@ -1,10 +1,10 @@
 package com.sym;
 
-import com.sym.mybatis.annotation.AnnotationApplication;
-import com.sym.mybatis.annotation.AnnotationMapper;
-import com.sym.mybatis.domain.SimpleEntity;
-import com.sym.mybatis.xml.XmlApplication;
+
+import com.sym.mybatis.MybatisApplication;
+import com.sym.mybatis.dao.AnnotationMapper;
 import com.sym.mybatis.dao.XmlMapper;
+import com.sym.mybatis.domain.SimpleEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @date 2020/3/25 10:04
  */
 @SuppressWarnings("ALL")
-@SpringBootTest(classes = {XmlApplication.class, AnnotationApplication.class})
+@SpringBootTest(classes = {MybatisApplication.class})
 @RunWith(SpringRunner.class)
 public class MybatisTest {
 

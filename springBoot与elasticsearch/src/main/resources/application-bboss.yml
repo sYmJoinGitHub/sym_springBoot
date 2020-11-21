@@ -1,0 +1,62 @@
+### bboss多集群配置
+#
+###配置两个集群，集群1的名字为default，集群2的名字为logs
+#elasticsearch:
+#  serverNames: default,logs
+#
+###default集群配配置
+#default:
+#  elasticUser: elastic
+#  elasticPassword: changeme
+#  elasticsearch:
+#    rest:
+#      hostNames: 127.0.0.1:9200 #集群内多个服务器地址用逗号隔开：10.180.211.27:9280,10.180.211.27:9281,10.180.211.27:9282
+#    dateFormat: yyyy-MM-dd HH:mm:ss #动态索引表名称日期格式配置
+#    timeZone: Asia/Shanghai
+#    ttl: 2d
+#    showTemplate: true #在控制台输出脚本调试开关showTemplate,false关闭，true打开，同时log4j至少是info级别
+#    discoverHost: false
+#  ##default连接池配置
+#  http:
+#    timeoutConnection: 400000
+#    timeoutSocket: 400000
+#    connectionRequestTimeout: 400000
+#    retryTime: 1
+#    maxLineLength: -1
+#    maxHeaderCount: 200
+#    maxTotal: 400
+#    defaultMaxPerRoute: 200
+#    keystore:
+#    keyPassword:
+#  # ssl 主机名称校验，是否采用default配置，
+#  # 如果指定为default，就采用DefaultHostnameVerifier,否则采用 SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
+#    hostnameVerifier:
+#
+#
+###logs集群配配置
+#logs:
+#  elasticUser: elastic
+#  elasticPassword: changeme
+#  elasticsearch:
+#    rest:
+#      hostNames: 127.0.0.1:9200 #集群内多个服务器地址用逗号隔开：10.180.211.27:9280,10.180.211.27:9281,10.180.211.27:9282
+#    dateFormat: yyyy-MM-dd HH:mm:ss #动态索引表名称日期格式配置
+#    timeZone: Asia/Shanghai
+#    ttl: 2d
+#    showTemplate: true #在控制台输出脚本调试开关showTemplate,false关闭，true打开，同时log4j至少是info级别
+#    discoverHost: false
+#  ##default连接池配置
+#  http:
+#    timeoutConnection: 400000
+#    timeoutSocket: 400000
+#    connectionRequestTimeout: 400000
+#    retryTime: 1
+#    maxLineLength: -1
+#    maxHeaderCount: 200
+#    maxTotal: 400
+#    defaultMaxPerRoute: 200
+#    keystore:
+#    keyPassword:
+#  # ssl 主机名称校验，是否采用default配置，
+#  # 如果指定为default，就采用DefaultHostnameVerifier,否则采用 SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
+#    hostnameVerifier:

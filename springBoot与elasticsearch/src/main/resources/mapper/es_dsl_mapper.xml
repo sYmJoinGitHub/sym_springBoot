@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<properties>
+
+    <!--不传递任何参数，查询指定的所有文档信息-->
+    <property name="queryAll">
+        <![CDATA[
+            {
+                "query":{
+                    "match_all":{}
+                },
+                "size":5
+            }
+        ]]>
+    </property>
+
+    <!--传递参数来搜索匹配查询，参数以Map形式传递，通过#[]+map.key取出变量-->
+    <property name="query_match">
+        <![CDATA[
+        {
+          "query": {
+            "match": {
+              "age": #[age]
+            }
+          },
+          "size":3
+        }
+        ]]>
+    </property>
+
+    <!--DSL脚本中逻辑判断语法：#if-#else-#end,#if-#elseif-#else-#end，参数以JavaBean形式传递-->
+    <!--注意使用逻辑判断语法时，不能以#[]这种格式取值，而是要以$[]。-->
+    <property name="query_withIf">
+        <![CDATA[
+        {
+            "query":{
+                "bool":{
+                    "must":[
+                        ## 动态映射if语句，可能会有多余的逗号，bboss处理没有mybatis那么智能，它需要额外定义一个局部变量
+                        ## 通过这个局部变量来控制逗号，只有变量为真才加逗号，具体逻辑看下面例子：
+                        #set( $flag=false )
+                        #if($age && $age>37)                  ## $age表示age!=null
+                            {"match":{"age":#[age]}}
+                            #set( $flag=true )
+                        #end
+                        #if($gender && !$gender.equals(""))   ## !$gender.equals("")表示gender不等于空字符串
+                            #if($flag),#else #set($flag=true) #end
+                            {"match":{"gender":#[gender]}}
+                        #elseif($state && !$state.equals(""))
+                            #if($flag),#else #set($flag=true) #end
+                            {"term":{"state":#[state]}}
+                        #end
+                    ]
+                }
+            },
+            "size":2
+        }
+        ]]>
+    </property>
+
+
+    <!--DSL语法中循环语法的使用语法：#foreach-#end,循环控制计数器变量：$velocityCount-->
+    <property name="query_withForeach">
+    <![CDATA[
+    {
+       "ids":[
+            #foreach( $id in $ids )
+                #if($velocityCount>0),#end
+                ## 使用 $id获取值，或者使用 #[ids[$velocityCount]]
+                "$id"
+            #end
+       ]
+    }
+    ]]>
+    </property>
+
+</properties>

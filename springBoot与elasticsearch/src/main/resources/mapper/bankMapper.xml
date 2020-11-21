@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<properties>
+
+    <property name="getAccountByNumber">
+        <![CDATA[
+            {
+                "query": {
+                    "match": {
+                        "account_number": #[accountNumber]
+                    }
+                }
+            }
+        ]]>
+    </property>
+
+    <property name="getAccountListFuzzyByFirstName">
+        <![CDATA[
+            {
+                "query": {
+                    "wildcard": {
+                        "firstname": #[firstname]
+                    }
+                }
+            }
+        ]]>
+    </property>
+
+    <property name="getAccountListByAge">
+        <![CDATA[
+            {
+                "query": {
+                    "match": {
+                        "age": #[age]
+                    }
+                }
+            }
+        ]]>
+    </property>
+
+    <property name="getAccountListByAgeAndCity">
+        <![CDATA[
+            {
+                "query": {
+                    "bool": {
+                         "must": [
+                            {"match": {"city": #[city]}},
+                            {"match": {"age": #[age]}}
+                          ]
+                    }
+                }
+            }
+        ]]>
+    </property>
+
+</properties>

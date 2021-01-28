@@ -1,4 +1,4 @@
-package com.sym.map.domain;
+package com.sym.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
